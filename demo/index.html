@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List Demo</title>
+    <link rel="stylesheet" href="./demo-page.css">
+</head>
+<body>
+    <main>
+        <h1>Overview</h1>
+        <div class="overview">
+            <div class="description">
+                <h2>Description</h2>
+                <!-- <p>The <code>&lt;task-card&gt;</code> element is a collection of a text-like input, a checkbox input, a color input, and a remove button, arranged for the purpose of listing them as tasks to be "completed".</p>
+                <p>The element provides access to the inputs via the attributes, and dispatches events when the inputs change or the remove button is invoked.</p> -->
+            </div>
+        </div>
+        <h1>Examples</h1>
+        <article class="basic">
+            <header>Basic Example</header>
+            <div class="description">
+                <!-- <p>The <code>&lt;task-card&gt;</code> element's description can be set by using the <code>value</code> attribute.</p>
+                <p>Each of the three inputs on the <code>&lt;task-card&gt;</code> element can be set via an attribute.</p>
+                <p>In this example, the element's <code>value</code> attribute is set to "Hello World":</p> -->
+            </div>
+            <div class="example">
+                <task-list>
+                    <task-card value="Top"></task-card>
+                    <task-card value="Middle"></task-card>
+                    <task-card value="Bottom"></task-card>
+                </task-list>
+            </div>
+        </article>
+        <article class="drag-and-drop">
+            <header>Drag and Drop</header>
+            <div class="description">
+                <!-- <p>Each of the <code>&lt;task-card&gt;</code> element's child inputs dispatch their own events and those events can be handled with common <code>addEventListener()</code> calls.</p>
+                <p>For convenience, the <code>&lt;task-card&gt;</code> element, itself, also dispatches the following events:</p>
+                <ul>
+                    <li><code>change</code></li>
+                    <li><code>remove</code></li>
+                </ul>
+                <p>The <code>change</code> event fires when any of the child inputs have their values updated. The <code>remove</code> event fires when the remove button is clicked.</p>
+                <p>In the following example, events are attached to both the <code>&lt;task-card&gt;</code> element and its child elements, to show the contrast. Attaching to one or the other is the reccommended practice.</p> -->
+            </div>
+            <div class="example">
+                <task-list name="List A">
+                    <task-card draggable="true" value="Top"></task-card>
+                    <task-card draggable="true" value="Middle"></task-card>
+                    <task-card draggable="true" value="Bottom"></task-card>
+                </task-list>
+                <task-list name="List B">
+                    <task-card draggable="true" value="High"></task-card>
+                    <task-card draggable="true" value="Medium"></task-card>
+                    <task-card draggable="true" value="Low"></task-card>
+                </task-list>
+                <task-list name="List C">
+                    <task-card draggable="true" value="Up"></task-card>
+                    <task-card draggable="true" value="Center"></task-card>
+                    <task-card draggable="true" value="Down"></task-card>
+                </task-list>
+            </div>
+            <script type="module">
+                const eventExample = document.querySelector('article.events task-card');
+                const eventsLog = document.querySelector('article.events .log ul')
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    const taskLists = [...example.querySelectorAll('task-list')];
+                    for(let i = 0; i < taskLists.length; i++)
+                    {
+                        const taskList = taskLists[i];
+                        
+                        // event fires whenever a draggable item is over the tasklist
+                        // multiple times per second, if mouse is dragging
+                        taskList.addEventListener('dragover', (event) =>
+                        {
+                            // default behavior is to disallow dragging; prevent that
+                            event.preventDefault();
+
+                            // define what kinds of effects are allowed for this drag
+                            event.dataTransfer.effectAllowed = "move";
+
+                            // get the next element in the list, if there 
+                            // are any, based on the mouse position;
+                            const tasks = [...taskList.querySelectorAll('task-card:not([data-drag-id])')];
+                            const nextElement = tasks.reduce((closest, task) =>
+                            {
+                                const boundingRect = task.getBoundingClientRect();
+                                const offset = event.clientY - boundingRect.top - (boundingRect.height / 2);
+                                if(offset < 0 && offset > closest.offset)
+                                {
+                                    return { offset, task };
+                                }
+                                return closest;
+                            }, { offset: Number.NEGATIVE_INFINITY }).task;
+
+                            // get a reference to the card being dragged
+                            const target = example.querySelector('task-card[data-drag-id]');
+            
+                            // prevent unecessary re-renders; this can kill perf, if you don't guard here;
+                            // re-rendering by appending or inserting on every mouse-move is heavy;
+                            if(target.parentElement == taskList && nextElement == target.nextElementSibling){ return; }
+
+
+                            // if there is no next element, or the list is collapsed, add the task
+                            // to the end of the list
+                            if(nextElement == null || taskList.getAttribute('collapsed') != null)
+                            {
+                                taskList.append(target);
+                            }
+                            else
+                            {
+                                // otherwise, insert the task before the next task in the list
+                                taskList.insertBefore(target, nextElement);
+                            }
+                        });
+                        taskList.addEventListener('drop', (event) =>
+                        {
+                            // if you don't prevent default
+                            // you can end up "dropping" into an
+                            // input element, which causes unwanted
+                            // side effects, based on the drag data
+                            event.preventDefault();
+                            event.stopPropagation();
+                            return false;
+                        });
+                    }
+                    
+                    const cards = [...example.querySelectorAll('task-card')];
+                    for(let i = 0; i < cards.length; i++)
+                    {
+                        const taskCard = cards[i];
+                        taskCard.addEventListener('dragstart', (event) =>
+                        {
+                            // create an identifier, so the lists can each find
+                            // this task. It allows them to easily handle this 
+                            // task differently than other tasks.
+                            const dragId = Math.floor(Math.random() * 1000).toString();
+                            event.dataTransfer.setData('text/plain', dragId);
+                            taskCard.dataset.dragId = dragId;
+                        });
+                        taskCard.addEventListener('dragend', (event) =>
+                        {
+                            // revoke the identifier, after the drag has ended
+                            delete taskCard.dataset.dragId;
+                        });
+                    }
+                });
+                // function logResult(result)
+                // {
+                //     const entry = document.createElement('li');
+                //     entry.textContent = JSON.stringify(result, null, 2);
+                //     entry.classList.add('entry');
+                //     eventsLog.append(entry);
+                // }
+            </script>
+        </article>
+        <article class="nested">
+            <header>Nested Lists</header>
+            <div class="description">
+                <!-- <p>Each of the <code>&lt;task-card&gt;</code> element's child inputs dispatch their own events and those events can be handled with common <code>addEventListener()</code> calls.</p>
+                <p>For convenience, the <code>&lt;task-card&gt;</code> element, itself, also dispatches the following events:</p>
+                <ul>
+                    <li><code>change</code></li>
+                    <li><code>remove</code></li>
+                </ul>
+                <p>The <code>change</code> event fires when any of the child inputs have their values updated. The <code>remove</code> event fires when the remove button is clicked.</p>
+                <p>In the following example, events are attached to both the <code>&lt;task-card&gt;</code> element and its child elements, to show the contrast. Attaching to one or the other is the reccommended practice.</p> -->
+            </div>
+            <div class="example">
+                <task-list name="List A" drag-drop>
+                    <task-card value="Top"></task-card>
+                    <task-card value="Middle"></task-card>
+                    <task-card value="Bottom"></task-card>
+                    <task-list slot="footer" name="List B" drag-drop>
+                        <task-card value="High"></task-card>
+                        <task-card value="Medium"></task-card>
+                        <task-card value="Low"></task-card>
+                        <task-list slot="footer" name="List C" drag-drop>
+                            <task-card value="Up"></task-card>
+                            <task-card value="Center"></task-card>
+                            <task-card value="Down"></task-card>
+                        </task-list>
+                    </task-list>
+                </task-list>
+            </div>
+            <script type="module">
+                // const eventExample = document.querySelector('article.events task-card');
+                // const eventsLog = document.querySelector('article.events .log ul')
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    const taskLists = [...example.querySelectorAll('task-list')];
+                    for(let i = 0; i < taskLists.length; i++)
+                    {
+                        const taskList = taskLists[i];
+                        
+                        // event fires whenever a draggable item is over the tasklist
+                        // multiple times per second, if mouse is dragging
+                        taskList.addEventListener('dragover', (event) =>
+                        {
+                            // default behavior is to disallow dragging; prevent that
+                            event.preventDefault();
+
+                            // define what kinds of effects are allowed for this drag
+                            event.dataTransfer.effectAllowed = "move";
+
+                            // get the next element in the list, if there 
+                            // are any, based on the mouse position;
+                            const tasks = [...taskList.querySelectorAll('task-card:not([data-drag-id])')];
+                            const nextElement = tasks.reduce((closest, task) =>
+                            {
+                                const boundingRect = task.getBoundingClientRect();
+                                const offset = event.clientY - boundingRect.top - (boundingRect.height / 2);
+                                if(offset < 0 && offset > closest.offset)
+                                {
+                                    return { offset, task };
+                                }
+                                return closest;
+                            }, { offset: Number.NEGATIVE_INFINITY }).task;
+
+                            // get a reference to the card being dragged
+                            const target = example.querySelector('task-card[data-drag-id]');
+            
+                            // prevent unecessary re-renders; this can kill perf, if you don't guard here;
+                            // re-rendering by appending or inserting on every mouse-move is heavy;
+                            if(target.parentElement == taskList && nextElement == target.nextElementSibling){ return; }
+
+
+                            // if there is no next element, or the list is collapsed, add the task
+                            // to the end of the list
+                            if(nextElement == null || taskList.getAttribute('collapsed') != null)
+                            {
+                                taskList.append(target);
+                            }
+                            else
+                            {
+                                // otherwise, insert the task before the next task in the list
+                                taskList.insertBefore(target, nextElement);
+                            }
+                        });
+                        taskList.addEventListener('drop', (event) =>
+                        {
+                            // if you don't prevent default
+                            // you can end up "dropping" into an
+                            // input element, which causes unwanted
+                            // side effects, based on the drag data
+                            event.preventDefault();
+                            event.stopPropagation();
+                            return false;
+                        });
+                    }
+                    
+                    const cards = [...example.querySelectorAll('task-card')];
+                    for(let i = 0; i < cards.length; i++)
+                    {
+                        const taskCard = cards[i];
+                        taskCard.addEventListener('dragstart', (event) =>
+                        {
+                            // create an identifier, so the lists can each find
+                            // this task. It allows them to easily handle this 
+                            // task differently than other tasks.
+                            const dragId = Math.floor(Math.random() * 1000).toString();
+                            event.dataTransfer.setData('text/plain', dragId);
+                            taskCard.dataset.dragId = dragId;
+                        });
+                        taskCard.addEventListener('dragend', (event) =>
+                        {
+                            // revoke the identifier, after the drag has ended
+                            delete taskCard.dataset.dragId;
+                        });
+                    }
+                });
+                // function logResult(result)
+                // {
+                //     const entry = document.createElement('li');
+                //     entry.textContent = JSON.stringify(result, null, 2);
+                //     entry.classList.add('entry');
+                //     eventsLog.append(entry);
+                // }
+            </script>
+        </article>
+        <article class="custom-collapse">
+            <header>Custom Collapse Behavior</header>
+            <div class="description">
+                <!-- <p>Each of the <code>&lt;task-card&gt;</code> element's child inputs dispatch their own events and those events can be handled with common <code>addEventListener()</code> calls.</p>
+                <p>For convenience, the <code>&lt;task-card&gt;</code> element, itself, also dispatches the following events:</p>
+                <ul>
+                    <li><code>change</code></li>
+                    <li><code>remove</code></li>
+                </ul>
+                <p>The <code>change</code> event fires when any of the child inputs have their values updated. The <code>remove</code> event fires when the remove button is clicked.</p>
+                <p>In the following example, events are attached to both the <code>&lt;task-card&gt;</code> element and its child elements, to show the contrast. Attaching to one or the other is the reccommended practice.</p> -->
+            </div>
+            <div class="example">
+                <task-list name="List A">
+                    <task-card draggable="true" value="Top"></task-card>
+                    <task-card draggable="true" value="Middle"></task-card>
+                    <task-card draggable="true" value="Bottom"></task-card>
+                </task-list>
+                <task-list name="List B">
+                    <task-card draggable="true" value="High"></task-card>
+                    <task-card draggable="true" value="Medium"></task-card>
+                    <task-card draggable="true" value="Low"></task-card>
+                </task-list>
+                <task-list name="List C">
+                    <task-card draggable="true" value="Up"></task-card>
+                    <task-card draggable="true" value="Center"></task-card>
+                    <task-card draggable="true" value="Down"></task-card>
+                </task-list>
+            </div>
+            <script type="module">
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    
+                });
+            </script>
+        </article>
+    </main>
+    <script type="module" src="../vanilla/task-list.js"></script>
+</body>
+</html>

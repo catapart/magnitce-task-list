@@ -1,0 +1,117 @@
+:host
+{
+    --border-color: rgb(95, 95, 95);
+    display: inline-block;
+    border: solid 1px var(--border-color);
+    border-radius: 3px;
+    padding: .5em;
+}
+@media (prefers-color-scheme: dark) 
+{
+    :host
+    {
+        --border-color: rgb(71, 71, 71);
+    }
+}
+
+
+[part="header"]
+{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: stretch;
+    position: sticky;
+}
+
+[part="color-container"]
+{
+    display: contents;
+}
+
+[part="color"]
+{
+    /* margin: .5em; */
+    padding: 0;
+    width: 12px;
+    min-height: 0;
+    height: auto;
+    /* border-radius: 3px; */
+    border: solid 1px transparent;
+}
+[part="color"]::-moz-color-swatch 
+{
+    border: none;
+    /* border-radius: 3px; */
+    padding: 0;
+    margin: 0;
+}
+
+[part="color"]::-webkit-color-swatch-wrapper 
+{
+    padding: 0;
+    margin: 0;
+}
+
+[part="color"]::-webkit-color-swatch 
+{
+    border: none;
+    /* border-radius: 3px; */
+    padding: 0;
+    margin: 0;
+}
+
+[part="name"]
+{
+    /* margin: .5em 0; */
+}
+
+[part="collapse-button"]
+{
+    /* margin: .5em; */
+}
+
+[part="tasks"]
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    /* min-height: 350px; */
+}
+
+[part="add-button"]
+{
+    margin-top: 1rem;
+    min-width: 100px;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+:host([collapsed]) > [part="tasks"]
+{
+    overflow: hidden;
+    height: min-content;
+}
+:host([collapsed]) > [part="tasks"] ::slotted(*)
+{
+    height: 0;
+    opacity: 0;
+    display: block;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+    border: none;
+    pointer-events: none;
+    user-select: none;
+}
+
+::slotted([data-drag-id])
+{
+    opacity: .7;
+    scale: .97;
+    transition: opacity 100ms ease, scale 100ms ease;
+}

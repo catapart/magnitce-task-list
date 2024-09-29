@@ -1,0 +1,14 @@
+<slot name="header">
+    <header part="header">
+        <label part="color-container" title="Color">
+            <input type="color" part="color" value="#919191" />
+        </label>
+        <input type="text" part="name" placeholder="List Name" />
+        <button type="button" part="collapse-button" title="Collapse">▲</button>
+    </header>
+</slot>
+<ul part="tasks">
+    <slot></slot>
+    <slot name="add-button"><button type="button" part="add-button" title="Add"><span part="icon">&plus;</span>Add Task</button></slot>
+</ul>
+<slot name="footer"></slot>
