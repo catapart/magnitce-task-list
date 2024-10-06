@@ -4,11 +4,16 @@
             <input type="color" part="color" value="#919191" />
         </label>
         <input type="text" part="name" placeholder="List Name" />
-        <button type="button" part="collapse-button" title="Collapse">▲</button>
+        <button type="button" part="collapse-button" title="Collapse">
+            <span part="collapse-icon">▲</span>
+        </button>
     </header>
 </slot>
 <ul part="tasks">
     <slot></slot>
-    <slot name="add-button"><button type="button" part="add-button" title="Add"><span part="icon">&plus;</span>Add Task</button></slot>
 </ul>
+<slot name="add-button"><button type="button" part="add-button" title="Add">
+    <span part="add-icon">&plus;</span>
+    <span part="add-label">Add Task</span>
+</button></slot>
 <slot name="footer"></slot>

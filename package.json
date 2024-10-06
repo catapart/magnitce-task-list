@@ -37,8 +37,5 @@
     "terser": "^5.31.3",
     "tsup": "^8.2.0",
     "typescript": "^5.5.3"
-  },
-  "dependencies": {
-    "@magnit-ce/task-card": "^0.0.2"
   }
 }
