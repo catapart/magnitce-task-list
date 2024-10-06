@@ -30,18 +30,15 @@
 
 [part="color"]
 {
-    /* margin: .5em; */
     padding: 0;
     width: 12px;
     min-height: 0;
     height: auto;
-    /* border-radius: 3px; */
     border: solid 1px transparent;
 }
 [part="color"]::-moz-color-swatch 
 {
     border: none;
-    /* border-radius: 3px; */
     padding: 0;
     margin: 0;
 }
@@ -55,19 +52,8 @@
 [part="color"]::-webkit-color-swatch 
 {
     border: none;
-    /* border-radius: 3px; */
     padding: 0;
     margin: 0;
-}
-
-[part="name"]
-{
-    /* margin: .5em 0; */
-}
-
-[part="collapse-button"]
-{
-    /* margin: .5em; */
 }
 
 [part="tasks"]
@@ -77,12 +63,12 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    /* min-height: 350px; */
 }
 
 [part="add-button"]
 {
     margin-top: 1rem;
+    margin-inline: auto;
     min-width: 100px;
     align-self: center;
     display: flex;
@@ -95,12 +81,8 @@
 {
     overflow: hidden;
     height: min-content;
-}
-:host([collapsed]) > [part="tasks"] ::slotted(*)
-{
     height: 0;
     opacity: 0;
-    display: block;
     white-space: nowrap;
     padding: 0;
     margin: 0;

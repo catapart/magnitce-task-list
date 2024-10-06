@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@magnit-ce/task-card':
-        specifier: ^0.0.2
-        version: 0.0.2
     devDependencies:
       '@changesets/cli':
         specifier: ^2.27.7
@@ -257,9 +253,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
-
-  '@magnit-ce/task-card@0.0.2':
-    resolution: {integrity: sha512-rjMWb0bDJ1nZIFzp7w6O7Cn/If/7X3IBlKS7YN0aZNL0wLozh3sNmXBwOApW6fuzP+cb2JkWYVgnWhL3w/0wkg==}
 
   '@manypkg/find-root@1.1.0':
     resolution: {integrity: sha512-mki5uBvhHzO8kYYix/WRy2WX8S3B5wdVSc9D6KcU5lQNglP2yt58/VfLuAK49glRXChosY8ap2oJ1qgma3GUVA==}
@@ -1458,8 +1451,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
-
-  '@magnit-ce/task-card@0.0.2': {}
 
   '@manypkg/find-root@1.1.0':
     dependencies:

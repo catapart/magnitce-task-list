@@ -31,21 +31,21 @@ p
 main
 {
     display: grid;
-    /* flex-direction: column; */
-    padding: 1em 3em;
+    padding: 1em;
     flex: 1;
     gap: 1em;
-    align-items: center;
-}
-main > header
-{
-    padding: 1em 0;
-    font-size: 2em;
+    grid-template-columns: 1fr minmax(300px, 960px) 1fr;
 }
 
 main :is(p, dl)
 {
-    max-width: 80ch;
+    max-width: 75ch;
+    margin-inline: auto;
+}
+
+main :is(h1, .overview, article)
+{
+    grid-column: 2;
 }
 
 main article
@@ -92,6 +92,7 @@ article menu
 article .example
 {
     margin-block: 1em;
+    margin-inline: auto;
 }
 
 header:has(small)

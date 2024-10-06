@@ -12,17 +12,18 @@
         <div class="overview">
             <div class="description">
                 <h2>Description</h2>
-                <!-- <p>The <code>&lt;task-card&gt;</code> element is a collection of a text-like input, a checkbox input, a color input, and a remove button, arranged for the purpose of listing them as tasks to be "completed".</p>
-                <p>The element provides access to the inputs via the attributes, and dispatches events when the inputs change or the remove button is invoked.</p> -->
+                <p>The <code>&lt;task-list&gt;</code> element provides features and events for managing a list of "task" items.</p>
+                <p>"Tasks" are represented by <code>&lt;task-card&gt;</code> elements, by default, but can be any element type.</p>
+                <p>The <code>&lt;task-list&gt;</code> element dispatches events when changes occur and can provide drag-and-drop functionality for its items.</p>
             </div>
         </div>
         <h1>Examples</h1>
         <article class="basic">
             <header>Basic Example</header>
             <div class="description">
-                <!-- <p>The <code>&lt;task-card&gt;</code> element's description can be set by using the <code>value</code> attribute.</p>
-                <p>Each of the three inputs on the <code>&lt;task-card&gt;</code> element can be set via an attribute.</p>
-                <p>In this example, the element's <code>value</code> attribute is set to "Hello World":</p> -->
+                <p>The <code>&lt;task-list&gt;</code> element's color, name, and description can all be adjusted either in the document, or using the element's attribtues.</p>
+                <p>Add <code>&lt;task-card&gt;</code> elements to a <code>&lt;task-card&gt;</code> element using static HTML, or by injecting the element dynamically with javascript.</p>
+                <p>In this example, the <code>&lt;task-list&gt;</code>'s <code>add</code> event is being handled to add new tasks. Each task is also having its <code>remove</code> event handled to extract the element from the DOM:</p>
             </div>
             <div class="example">
                 <task-list>
@@ -31,144 +32,147 @@
                     <task-card value="Bottom"></task-card>
                 </task-list>
             </div>
+            <script type="module">
+                const basicExample = document.querySelector('article.basic');
+                const basicTaskList = basicExample.querySelector('task-list');
+                document.addEventListener('DOMContentLoaded', () =>
+                {
+                    basicTaskList.addEventListener('add', () =>
+                    {
+                        const task = document.createElement('task-card');
+                        task.addEventListener('remove', basic_task_onRemove);
+                        basicTaskList.append(task);
+                    });
+
+                    const tasks = [...basicTaskList.querySelectorAll('task-card')];
+                    for(let i = 0; i < tasks.length; i++)
+                    {
+                        tasks[i].addEventListener('remove', basic_task_onRemove);
+                    }
+                });
+
+                function basic_task_onRemove(event)
+                {
+                    const task = event.currentTarget;
+                    task.remove();
+                }
+            </script>
         </article>
         <article class="drag-and-drop">
             <header>Drag and Drop</header>
             <div class="description">
-                <!-- <p>Each of the <code>&lt;task-card&gt;</code> element's child inputs dispatch their own events and those events can be handled with common <code>addEventListener()</code> calls.</p>
-                <p>For convenience, the <code>&lt;task-card&gt;</code> element, itself, also dispatches the following events:</p>
-                <ul>
-                    <li><code>change</code></li>
-                    <li><code>remove</code></li>
-                </ul>
-                <p>The <code>change</code> event fires when any of the child inputs have their values updated. The <code>remove</code> event fires when the remove button is clicked.</p>
-                <p>In the following example, events are attached to both the <code>&lt;task-card&gt;</code> element and its child elements, to show the contrast. Attaching to one or the other is the reccommended practice.</p> -->
+                <p>"Drag and Drop" functionality can be enabled on any <code>&lt;task-list&gt;</code> element by setting the <code>drag-drop</code> attribute <em>(does not require a value)</em>.</p>
+                <p>When using the drag and drop functionality, the lists will need to query for other list items that are available as potential siblings for the list item that is being dragged. To do this, the <code>&lt;task-list&gt;</code> element queries on a parent container. By default, this is the document's <code>&lt;body&gt;</code> element, but it can be set to any element that contains all of the <code>&lt;task-list&gt;</code>s you want to enable dragging and dropping for.</p>
+                <p>You can see a demonstration of this by dragging an item from this "Drag and Drop" example, down to the "Events" example below, or vice versa.</p>
+                <p>By contrast, dragging and dropping does not work correctly between the "Nested" example and any other example, because the "Nested" example explicitly limits the parent scope.</p>
+                <p>In this example, the <code>&lt;task-list&gt;</code>s each have a <code>drag-drop</code> attribute, and so any of their items can be mixed and matched by dragging them. Note that the attribute is the only requirement; no additional javascript is needed to handle the drag and drop features:</p>
             </div>
             <div class="example">
-                <task-list name="List A">
-                    <task-card draggable="true" value="Top"></task-card>
-                    <task-card draggable="true" value="Middle"></task-card>
-                    <task-card draggable="true" value="Bottom"></task-card>
+                <task-list name="List A" drag-drop>
+                    <task-card value="Top"></task-card>
+                    <task-card value="Middle"></task-card>
+                    <task-card value="Bottom"></task-card>
                 </task-list>
-                <task-list name="List B">
-                    <task-card draggable="true" value="High"></task-card>
-                    <task-card draggable="true" value="Medium"></task-card>
-                    <task-card draggable="true" value="Low"></task-card>
+                <task-list name="List B" drag-drop>
+                    <task-card value="High"></task-card>
+                    <task-card value="Medium"></task-card>
+                    <task-card value="Low"></task-card>
                 </task-list>
-                <task-list name="List C">
-                    <task-card draggable="true" value="Up"></task-card>
-                    <task-card draggable="true" value="Center"></task-card>
-                    <task-card draggable="true" value="Down"></task-card>
+                <task-list name="List C" drag-drop>
+                    <task-card value="Up"></task-card>
+                    <task-card value="Center"></task-card>
+                    <task-card value="Down"></task-card>
                 </task-list>
             </div>
+        </article>
+        <article class="events">
+            <header>Events</header>
+            <div class="description">
+                <p>The <code>&lt;task-list&gt;</code> element dispatches a <code>change</code> event whenever it is changed. This includes when the properties, like name or color, change as well as when the list's items change order.</p>
+                <p>When the "Add" button is clicked, the <code>&lt;task-list&gt;</code> will dispatch and <code>add</code> event.</p>
+                <p>When the list's <code>collapsed</code> state changes, like when the button toggles it, the <code>collapsed</code> event will be dispatched.</p>
+                <p>If a <code>&lt;task-list&gt;</code> element is added as a child to another <code>&lt;task-list&gt;</code> element, the top-level <code>&lt;task-list&gt;</code> element will dispatch a <code>nested</code> event.</p>
+                <p>If the drag and drop feature is enabled, the <code>&lt;task-list&gt;</code> element will dispatch an <code>added</code> event whenever an item is dragged into the list, and a <code>removed</code> event whenever an item is dropped in a different list than it was dragged from.</p>
+                <p>In this example, each event fired by the <code>&lt;task-list&gt;</code> element is listened for and the event's data is logged out to the event log, below:</p>
+            </div>
+            <div class="example" style="display:flex;align-items:flex-start;">
+                <task-list name="List A" drag-drop>
+                    <task-card value="Top"></task-card>
+                    <task-card value="Middle"></task-card>
+                    <task-card value="Bottom"></task-card>
+                </task-list>
+                <task-list name="List B" drag-drop>
+                    <task-card value="High"></task-card>
+                    <task-card value="Medium"></task-card>
+                    <task-card value="Low"></task-card>
+                </task-list>
+                <task-list name="List C" drag-drop>
+                    <task-card value="Up"></task-card>
+                    <task-card value="Center"></task-card>
+                    <task-card value="Down"></task-card>
+                </task-list>
+            </div>
+            <div class="log">
+                <header>
+                    <span class="title">Event Log</span>
+                </header>
+                <ul></ul>
+            </div>
             <script type="module">
-                const eventExample = document.querySelector('article.events task-card');
+                const eventsExample = document.querySelector('article.events');
                 const eventsLog = document.querySelector('article.events .log ul')
                 document.addEventListener('DOMContentLoaded', () =>
                 {
-                    const taskLists = [...example.querySelectorAll('task-list')];
+                    const taskLists = [...eventsExample.querySelectorAll('task-list')];
                     for(let i = 0; i < taskLists.length; i++)
                     {
                         const taskList = taskLists[i];
-                        
-                        // event fires whenever a draggable item is over the tasklist
-                        // multiple times per second, if mouse is dragging
-                        taskList.addEventListener('dragover', (event) =>
+
+                        taskList.addEventListener('change', (event) =>
                         {
-                            // default behavior is to disallow dragging; prevent that
-                            event.preventDefault();
-
-                            // define what kinds of effects are allowed for this drag
-                            event.dataTransfer.effectAllowed = "move";
-
-                            // get the next element in the list, if there 
-                            // are any, based on the mouse position;
-                            const tasks = [...taskList.querySelectorAll('task-card:not([data-drag-id])')];
-                            const nextElement = tasks.reduce((closest, task) =>
-                            {
-                                const boundingRect = task.getBoundingClientRect();
-                                const offset = event.clientY - boundingRect.top - (boundingRect.height / 2);
-                                if(offset < 0 && offset > closest.offset)
-                                {
-                                    return { offset, task };
-                                }
-                                return closest;
-                            }, { offset: Number.NEGATIVE_INFINITY }).task;
-
-                            // get a reference to the card being dragged
-                            const target = example.querySelector('task-card[data-drag-id]');
-            
-                            // prevent unecessary re-renders; this can kill perf, if you don't guard here;
-                            // re-rendering by appending or inserting on every mouse-move is heavy;
-                            if(target.parentElement == taskList && nextElement == target.nextElementSibling){ return; }
-
-
-                            // if there is no next element, or the list is collapsed, add the task
-                            // to the end of the list
-                            if(nextElement == null || taskList.getAttribute('collapsed') != null)
-                            {
-                                taskList.append(target);
-                            }
-                            else
-                            {
-                                // otherwise, insert the task before the next task in the list
-                                taskList.insertBefore(target, nextElement);
-                            }
+                            logResult({ eventType: 'change', detail: { order: event.detail.order, previousOrder: event.detail.previousOrder, target: event.detail.target.tagName } });
                         });
-                        taskList.addEventListener('drop', (event) =>
+                        taskList.addEventListener('add', (event) =>
                         {
-                            // if you don't prevent default
-                            // you can end up "dropping" into an
-                            // input element, which causes unwanted
-                            // side effects, based on the drag data
-                            event.preventDefault();
-                            event.stopPropagation();
-                            return false;
+                            logResult({ eventType: 'add', detail: event.detail });
                         });
-                    }
-                    
-                    const cards = [...example.querySelectorAll('task-card')];
-                    for(let i = 0; i < cards.length; i++)
-                    {
-                        const taskCard = cards[i];
-                        taskCard.addEventListener('dragstart', (event) =>
+                        taskList.addEventListener('nested', (event) =>
                         {
-                            // create an identifier, so the lists can each find
-                            // this task. It allows them to easily handle this 
-                            // task differently than other tasks.
-                            const dragId = Math.floor(Math.random() * 1000).toString();
-                            event.dataTransfer.setData('text/plain', dragId);
-                            taskCard.dataset.dragId = dragId;
+                            logResult({ eventType: 'nested', detail: event.detail });
                         });
-                        taskCard.addEventListener('dragend', (event) =>
+                        taskList.addEventListener('added', (event) =>
                         {
-                            // revoke the identifier, after the drag has ended
-                            delete taskCard.dataset.dragId;
+                            logResult({ eventType: 'added', detail: { order: event.detail.order, target: event.detail.target.tagName } });
+                        });
+                        taskList.addEventListener('removed', (event) =>
+                        {
+                            logResult({ eventType: 'removed', detail: { order: event.detail.order, target: event.detail.target.tagName } });
+                        });
+                        taskList.addEventListener('collapse', (event) =>
+                        {
+                            logResult({ eventType: 'collapse', detail: event.detail });
                         });
                     }
                 });
-                // function logResult(result)
-                // {
-                //     const entry = document.createElement('li');
-                //     entry.textContent = JSON.stringify(result, null, 2);
-                //     entry.classList.add('entry');
-                //     eventsLog.append(entry);
-                // }
+                function logResult(result)
+                {
+                    const entry = document.createElement('li');
+                    entry.textContent = JSON.stringify(result, null, 2);
+                    entry.classList.add('entry');
+                    eventsLog.append(entry);
+                }
             </script>
         </article>
         <article class="nested">
             <header>Nested Lists</header>
             <div class="description">
-                <!-- <p>Each of the <code>&lt;task-card&gt;</code> element's child inputs dispatch their own events and those events can be handled with common <code>addEventListener()</code> calls.</p>
-                <p>For convenience, the <code>&lt;task-card&gt;</code> element, itself, also dispatches the following events:</p>
-                <ul>
-                    <li><code>change</code></li>
-                    <li><code>remove</code></li>
-                </ul>
-                <p>The <code>change</code> event fires when any of the child inputs have their values updated. The <code>remove</code> event fires when the remove button is clicked.</p>
-                <p>In the following example, events are attached to both the <code>&lt;task-card&gt;</code> element and its child elements, to show the contrast. Attaching to one or the other is the reccommended practice.</p> -->
+                <p>A <code>&lt;task-list&gt;</code> element can be used as a child of another <code>&lt;task-list&gt;</code> element which is described here as "nesting".</p>
+                <p>Due to the default behavior of a child element to be rendered in the "items" slot (default slot), the nested <code>&lt;task-list&gt;</code> element would appear above the "Add" button, but below the other items in the list.</p>
+                <p>The placement of a nested <code>&lt;task-list&gt;</code> element in the items list may cause confusions because at the end of the nested lists, there would be multiple "Add" buttons, each corresponding to a nesting level.</p>
+                <p>To circumvent that issue, nested <code>&lt;task-list&gt;</code> elements can set their <code>slot</code> attributes to <code>footer</code>, which will cause them to render below the "Add" button in the parent list, as seen in the example below.</p>
+                <p>In this example, each of the <code>&lt;task-list&gt;</code> elements have drag and drop enabled, but they are scoped to only the lists in this example:</p>
             </div>
-            <div class="example">
+            <div class="example" style="display:flex;align-items:flex-start;">
                 <task-list name="List A" drag-drop>
                     <task-card value="Top"></task-card>
                     <task-card value="Middle"></task-card>
@@ -184,139 +188,116 @@
                         </task-list>
                     </task-list>
                 </task-list>
+                <task-list name="List D" drag-drop>
+                    <task-card value="Top"></task-card>
+                    <task-card value="Middle"></task-card>
+                    <task-card value="Bottom"></task-card>
+                    <task-list slot="footer" name="List E" drag-drop>
+                        <task-card value="High"></task-card>
+                        <task-card value="Medium"></task-card>
+                        <task-card value="Low"></task-card>
+                        <task-list slot="footer" name="List F" drag-drop>
+                            <task-card value="Up"></task-card>
+                            <task-card value="Center"></task-card>
+                            <task-card value="Down"></task-card>
+                        </task-list>
+                    </task-list>
+                </task-list>
             </div>
             <script type="module">
-                // const eventExample = document.querySelector('article.events task-card');
-                // const eventsLog = document.querySelector('article.events .log ul')
+                const nestedExample = document.querySelector('article.nested');
                 document.addEventListener('DOMContentLoaded', () =>
                 {
-                    const taskLists = [...example.querySelectorAll('task-list')];
+                    const taskLists = [...nestedExample.querySelectorAll('task-list')];
                     for(let i = 0; i < taskLists.length; i++)
                     {
                         const taskList = taskLists[i];
-                        
-                        // event fires whenever a draggable item is over the tasklist
-                        // multiple times per second, if mouse is dragging
-                        taskList.addEventListener('dragover', (event) =>
-                        {
-                            // default behavior is to disallow dragging; prevent that
-                            event.preventDefault();
-
-                            // define what kinds of effects are allowed for this drag
-                            event.dataTransfer.effectAllowed = "move";
-
-                            // get the next element in the list, if there 
-                            // are any, based on the mouse position;
-                            const tasks = [...taskList.querySelectorAll('task-card:not([data-drag-id])')];
-                            const nextElement = tasks.reduce((closest, task) =>
-                            {
-                                const boundingRect = task.getBoundingClientRect();
-                                const offset = event.clientY - boundingRect.top - (boundingRect.height / 2);
-                                if(offset < 0 && offset > closest.offset)
-                                {
-                                    return { offset, task };
-                                }
-                                return closest;
-                            }, { offset: Number.NEGATIVE_INFINITY }).task;
-
-                            // get a reference to the card being dragged
-                            const target = example.querySelector('task-card[data-drag-id]');
-            
-                            // prevent unecessary re-renders; this can kill perf, if you don't guard here;
-                            // re-rendering by appending or inserting on every mouse-move is heavy;
-                            if(target.parentElement == taskList && nextElement == target.nextElementSibling){ return; }
-
-
-                            // if there is no next element, or the list is collapsed, add the task
-                            // to the end of the list
-                            if(nextElement == null || taskList.getAttribute('collapsed') != null)
-                            {
-                                taskList.append(target);
-                            }
-                            else
-                            {
-                                // otherwise, insert the task before the next task in the list
-                                taskList.insertBefore(target, nextElement);
-                            }
-                        });
-                        taskList.addEventListener('drop', (event) =>
-                        {
-                            // if you don't prevent default
-                            // you can end up "dropping" into an
-                            // input element, which causes unwanted
-                            // side effects, based on the drag data
-                            event.preventDefault();
-                            event.stopPropagation();
-                            return false;
-                        });
-                    }
-                    
-                    const cards = [...example.querySelectorAll('task-card')];
-                    for(let i = 0; i < cards.length; i++)
-                    {
-                        const taskCard = cards[i];
-                        taskCard.addEventListener('dragstart', (event) =>
-                        {
-                            // create an identifier, so the lists can each find
-                            // this task. It allows them to easily handle this 
-                            // task differently than other tasks.
-                            const dragId = Math.floor(Math.random() * 1000).toString();
-                            event.dataTransfer.setData('text/plain', dragId);
-                            taskCard.dataset.dragId = dragId;
-                        });
-                        taskCard.addEventListener('dragend', (event) =>
-                        {
-                            // revoke the identifier, after the drag has ended
-                            delete taskCard.dataset.dragId;
-                        });
+                        taskList.dragAndDropQueryParent = nestedExample;
                     }
                 });
-                // function logResult(result)
-                // {
-                //     const entry = document.createElement('li');
-                //     entry.textContent = JSON.stringify(result, null, 2);
-                //     entry.classList.add('entry');
-                //     eventsLog.append(entry);
-                // }
             </script>
         </article>
         <article class="custom-collapse">
             <header>Custom Collapse Behavior</header>
             <div class="description">
-                <!-- <p>Each of the <code>&lt;task-card&gt;</code> element's child inputs dispatch their own events and those events can be handled with common <code>addEventListener()</code> calls.</p>
-                <p>For convenience, the <code>&lt;task-card&gt;</code> element, itself, also dispatches the following events:</p>
-                <ul>
-                    <li><code>change</code></li>
-                    <li><code>remove</code></li>
-                </ul>
-                <p>The <code>change</code> event fires when any of the child inputs have their values updated. The <code>remove</code> event fires when the remove button is clicked.</p>
-                <p>In the following example, events are attached to both the <code>&lt;task-card&gt;</code> element and its child elements, to show the contrast. Attaching to one or the other is the reccommended practice.</p> -->
+                <p>The <code>&lt;task-list&gt;</code> element uses the shadow DOM for its layout, but it's elements can still be styled by using the <code>::part()</code> selector.</p>
+                <p>To demonstrate, the example below shows the default "collapse" behavior of hiding the items being re-styled to collapse the list horizontally, with an animation:</p>
             </div>
-            <div class="example">
-                <task-list name="List A">
-                    <task-card draggable="true" value="Top"></task-card>
-                    <task-card draggable="true" value="Middle"></task-card>
-                    <task-card draggable="true" value="Bottom"></task-card>
+            <div class="example" style="display:grid;align-items:flex-start;grid-template-columns: auto auto auto;">
+                <task-list name="List A" color="#a8f94e">
+                    <task-card value="Top"></task-card>
+                    <task-card value="Middle"></task-card>
+                    <task-card value="Bottom"></task-card>
                 </task-list>
-                <task-list name="List B">
-                    <task-card draggable="true" value="High"></task-card>
-                    <task-card draggable="true" value="Medium"></task-card>
-                    <task-card draggable="true" value="Low"></task-card>
+                <task-list name="List B" color="#79d50c">
+                    <task-card value="High"></task-card>
+                    <task-card value="Medium"></task-card>
+                    <task-card value="Low"></task-card>
                 </task-list>
-                <task-list name="List C">
-                    <task-card draggable="true" value="Up"></task-card>
-                    <task-card draggable="true" value="Center"></task-card>
-                    <task-card draggable="true" value="Down"></task-card>
+                <task-list name="List C" color="#4c701f">
+                    <task-card value="Up"></task-card>
+                    <task-card value="Center"></task-card>
+                    <task-card value="Down"></task-card>
                 </task-list>
             </div>
-            <script type="module">
-                document.addEventListener('DOMContentLoaded', () =>
+            <style>
+                .custom-collapse task-list
                 {
-                    
-                });
-            </script>
+                    width: auto;
+                    width: calc-size(auto, size);
+                    transition: width 200ms ease;
+                }
+                
+                .custom-collapse task-list[collapsed]
+                {
+                    /* width: 50px; */
+                    width: min-content;
+                }
+
+                .custom-collapse task-list[collapsed]::part(tasks)
+                {
+                    /* prevent default behavior of setting height to 0 */
+                    height: auto;
+
+                    width: 0;
+                    transition: all 200ms ease;
+                }
+                .custom-collapse task-list::part(name)
+                {
+                    width: auto;
+                    width: calc-size(auto, size);
+                    transition: width 200ms ease;           
+                }
+                .custom-collapse task-list[collapsed]::part(name)
+                {
+                    width: 0;
+                    padding: 0;
+                    margin: 0;
+                    text-overflow: hidden;
+                    border: none;
+                    transition: all 200ms ease;                    
+                }
+                .custom-collapse task-list::part(collapse-icon)
+                {
+                    display: inline-block;
+                    rotate: -90deg;
+                }
+                .custom-collapse task-list[collapsed]::part(collapse-icon)
+                {
+                    rotate: -90deg;
+                }
+                .custom-collapse task-list[collapsed]::part(add-button)
+                {
+                    min-width: auto;
+                }
+                .custom-collapse task-list[collapsed]::part(add-label)
+                {
+                    display: none;
+                }
+            </style>
         </article>
     </main>
+    <script type="module" src="./task-card.min.js"></script>
     <script type="module" src="../vanilla/task-list.js"></script>
 </body>
 </html>
