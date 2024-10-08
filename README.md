@@ -262,11 +262,11 @@ task-list::part(header)
 For a list of all part names, see the [parts](#parts) section.
 
 ## `<task-card>` and `<task-board>` elements
-The `<task-list>` element is designed as a parent to the [`<task-card>`](https://github.com/catapart/magnitce-task-card) element and a child for the [`<task-board>`]() element.
+The `<task-list>` element is designed as a parent to the [`<task-card>`](https://github.com/catapart/magnitce-task-card) element and a child for the [`<task-board>`](https://github.com/catapart/magnitce-task-board) element.
 
 Neither the `<task-board>` or the `<task-card>` elements are required for the `<task-list>` element to function, but design decisions were made around how these three elements are expected to work together.
 
-For developing custom implementations, the [`<task-board>` demo page]() gives examples of the three elements used as expected.
+For developing custom implementations, the [`<task-board>` demo page](https://catapart.github.io/magnitce-task-board/demo/) gives examples of the three elements used as expected.
 
 
 ## License

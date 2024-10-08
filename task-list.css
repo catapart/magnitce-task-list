@@ -18,8 +18,8 @@
 [part="header"]
 {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: stretch;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
     position: sticky;
 }
 
@@ -35,6 +35,7 @@
     min-height: 0;
     height: auto;
     border: solid 1px transparent;
+    align-self: stretch;
 }
 [part="color"]::-moz-color-swatch 
 {
@@ -96,4 +97,9 @@
     opacity: .7;
     scale: .97;
     transition: opacity 100ms ease, scale 100ms ease;
+}
+
+::slotted(task-list)
+{
+    margin-block: 7px;
 }
