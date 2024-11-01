@@ -58,11 +58,11 @@ export class TaskListElement extends HTMLElement
 
         this.findPart('name').addEventListener('change', (event) =>
         {
-            this.dispatchEvent(new CustomEvent(TaskListEvents.Change, { detail: { target: event.target }}));
+            this.dispatchEvent(new CustomEvent(TaskListEvents.Change, { bubbles: true, cancelable: true, detail: { target: event.target }}));
         });
         this.findPart('color').addEventListener('change', (event) =>
         {
-            this.dispatchEvent(new CustomEvent(TaskListEvents.Change, { detail: { target: event.target }}));
+            this.dispatchEvent(new CustomEvent(TaskListEvents.Change, { bubbles: true, cancelable: true, detail: { target: event.target }}));
         });
 
         this.findPart('collapse-button').addEventListener('click', () =>
@@ -73,7 +73,7 @@ export class TaskListElement extends HTMLElement
         this.findPart('add-button').addEventListener('click', () =>
         {
             const order = this.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`).length;
-            this.dispatchEvent(new CustomEvent(TaskListEvents.Add, { bubbles: true, detail: { order } }));
+            this.dispatchEvent(new CustomEvent(TaskListEvents.Add, { bubbles: true, cancelable: true, detail: { order } }));
         });
 
 
@@ -93,7 +93,7 @@ export class TaskListElement extends HTMLElement
                 }
                 if(children[i].tagName.toLowerCase() == COMPONENT_TAG_NAME.toLowerCase())
                 {
-                    this.dispatchEvent(new CustomEvent(TaskListEvents.Nested, { bubbles: true, detail: { target: children[i] } }));
+                    this.dispatchEvent(new CustomEvent(TaskListEvents.Nested, { bubbles: true, cancelable: true, detail: { target: children[i] } }));
                     this.handledItems.add(children[i]);
                 }
                 if(children[i].tagName.toLowerCase() == this.TASKCARD_TAG_NAME.toLowerCase())
@@ -115,13 +115,13 @@ export class TaskListElement extends HTMLElement
     {
         this.findPart('collapse-icon').textContent = '▼';
         this.setAttribute('collapsed', '');
-        this.dispatchEvent(new CustomEvent(TaskListEvents.Collapse));
+        this.dispatchEvent(new CustomEvent(TaskListEvents.Collapse, { bubbles: true, cancelable: true }));
     }
     show()
     {
         this.findPart('collapse-icon').textContent = '▲';
         this.removeAttribute('collapsed');
-        this.dispatchEvent(new CustomEvent(TaskListEvents.Collapse));
+        this.dispatchEvent(new CustomEvent(TaskListEvents.Collapse, { bubbles: true, cancelable: true }));
     }
 
     
