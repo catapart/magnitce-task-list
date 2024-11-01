@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.7
+
+### Patch Changes
+
+- 32093b5: updated queryParent to context root
+
 ## 0.0.6
 
 ### Patch Changes
