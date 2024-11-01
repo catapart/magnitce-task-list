@@ -90,8 +90,8 @@ var TaskListElement = class extends HTMLElement {
     this.removeAttribute("collapsed");
     this.dispatchEvent(new CustomEvent("collapse" /* Collapse */, { bubbles: true, cancelable: true }));
   }
-  static observedAttributes = ["name", "description", "color", "collapsed"];
-  attributeChangedCallback(attributeName, _oldValue, newValue) {
+  static observedAttributes = ["name", "description", "color", "collapsed", "drag-drop"];
+  attributeChangedCallback(attributeName, oldValue, newValue) {
     if (attributeName == "name") {
       this.findPart("name").value = newValue;
     } else if (attributeName == "description") {
@@ -104,6 +104,8 @@ var TaskListElement = class extends HTMLElement {
       } else {
         this.classList.remove("collapsed");
       }
+    } else if (attributeName == "drag-drop" && oldValue == null) {
+      this.#applyDragAndDropHandlers();
     }
   }
   #applyDragAndDropHandlers() {

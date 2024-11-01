@@ -126,8 +126,8 @@ export class TaskListElement extends HTMLElement
 
     
 
-    static observedAttributes = [ 'name', 'description', 'color', 'collapsed', ];
-    attributeChangedCallback(attributeName: string, _oldValue: string, newValue: string) 
+    static observedAttributes = [ 'name', 'description', 'color', 'collapsed', 'drag-drop'];
+    attributeChangedCallback(attributeName: string, oldValue: string, newValue: string) 
     {  
     // console.log(attributeName, oldValue, newValue);
 
@@ -153,6 +153,10 @@ export class TaskListElement extends HTMLElement
             {
                 this.classList.remove('collapsed');
             }
+        }
+        else if(attributeName == 'drag-drop' && oldValue == null)
+        {
+            this.#applyDragAndDropHandlers();
         }
     }
 
