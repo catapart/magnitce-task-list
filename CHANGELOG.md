@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.4
+
+### Patch Changes
+
+- ced0584: added more bubbling and cancellation to events
+
 ## 0.0.3
 
 ### Patch Changes
