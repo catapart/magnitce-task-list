@@ -40,7 +40,7 @@ var TaskListElement = class extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.shadowRoot.innerHTML = task_list_default2;
     this.shadowRoot.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
-    this.dragAndDropQueryParent = document.body;
+    this.dragAndDropQueryParent = this.getRootNode();
     this.findPart("name").addEventListener("change", (event) => {
       this.dispatchEvent(new CustomEvent("change" /* Change */, { bubbles: true, cancelable: true, detail: { target: event.target } }));
     });
