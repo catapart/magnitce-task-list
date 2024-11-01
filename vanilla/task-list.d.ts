@@ -27,7 +27,7 @@ declare class TaskListElement extends HTMLElement {
     hide(): void;
     show(): void;
     static observedAttributes: string[];
-    attributeChangedCallback(attributeName: string, _oldValue: string, newValue: string): void;
+    attributeChangedCallback(attributeName: string, oldValue: string, newValue: string): void;
     applyDragAndDropCardHandler(taskCard: HTMLElement): void;
 }
 
