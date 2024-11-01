@@ -29,7 +29,7 @@ export class TaskListElement extends HTMLElement
 {
     TASKCARD_TAG_NAME: string = 'task-card';
 
-    dragAndDropQueryParent: HTMLElement;
+    dragAndDropQueryParent: Document|ShadowRoot|HTMLElement;
     parentScopeSelector: string = '';
 
     componentParts: Map<string, HTMLElement> = new Map();
@@ -54,7 +54,7 @@ export class TaskListElement extends HTMLElement
         this.shadowRoot!.innerHTML = html;
         this.shadowRoot!.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
 
-        this.dragAndDropQueryParent = document.body;
+        this.dragAndDropQueryParent = this.getRootNode() as Document|ShadowRoot;
 
         this.findPart('name').addEventListener('change', (event) =>
         {

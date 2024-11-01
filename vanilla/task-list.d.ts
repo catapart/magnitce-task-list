@@ -16,7 +16,7 @@ declare const COMPONENT_TAG_NAME = "task-list";
 declare class TaskListElement extends HTMLElement {
     #private;
     TASKCARD_TAG_NAME: string;
-    dragAndDropQueryParent: HTMLElement;
+    dragAndDropQueryParent: Document | ShadowRoot | HTMLElement;
     parentScopeSelector: string;
     componentParts: Map<string, HTMLElement>;
     getPart<T extends HTMLElement = HTMLElement>(key: string): T;
