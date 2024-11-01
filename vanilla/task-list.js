@@ -42,17 +42,17 @@ var TaskListElement = class extends HTMLElement {
     this.shadowRoot.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
     this.dragAndDropQueryParent = document.body;
     this.findPart("name").addEventListener("change", (event) => {
-      this.dispatchEvent(new CustomEvent("change" /* Change */, { detail: { target: event.target } }));
+      this.dispatchEvent(new CustomEvent("change" /* Change */, { bubbles: true, cancelable: true, detail: { target: event.target } }));
     });
     this.findPart("color").addEventListener("change", (event) => {
-      this.dispatchEvent(new CustomEvent("change" /* Change */, { detail: { target: event.target } }));
+      this.dispatchEvent(new CustomEvent("change" /* Change */, { bubbles: true, cancelable: true, detail: { target: event.target } }));
     });
     this.findPart("collapse-button").addEventListener("click", () => {
       this.toggleHidden();
     });
     this.findPart("add-button").addEventListener("click", () => {
       const order = this.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`).length;
-      this.dispatchEvent(new CustomEvent("add" /* Add */, { bubbles: true, detail: { order } }));
+      this.dispatchEvent(new CustomEvent("add" /* Add */, { bubbles: true, cancelable: true, detail: { order } }));
     });
     if (this.getAttribute("drag-drop") != null) {
       this.#applyDragAndDropHandlers();
@@ -64,7 +64,7 @@ var TaskListElement = class extends HTMLElement {
           continue;
         }
         if (children[i].tagName.toLowerCase() == COMPONENT_TAG_NAME.toLowerCase()) {
-          this.dispatchEvent(new CustomEvent("nested" /* Nested */, { bubbles: true, detail: { target: children[i] } }));
+          this.dispatchEvent(new CustomEvent("nested" /* Nested */, { bubbles: true, cancelable: true, detail: { target: children[i] } }));
           this.handledItems.add(children[i]);
         }
         if (children[i].tagName.toLowerCase() == this.TASKCARD_TAG_NAME.toLowerCase()) {
@@ -83,12 +83,12 @@ var TaskListElement = class extends HTMLElement {
   hide() {
     this.findPart("collapse-icon").textContent = "\u25BC";
     this.setAttribute("collapsed", "");
-    this.dispatchEvent(new CustomEvent("collapse" /* Collapse */));
+    this.dispatchEvent(new CustomEvent("collapse" /* Collapse */, { bubbles: true, cancelable: true }));
   }
   show() {
     this.findPart("collapse-icon").textContent = "\u25B2";
     this.removeAttribute("collapsed");
-    this.dispatchEvent(new CustomEvent("collapse" /* Collapse */));
+    this.dispatchEvent(new CustomEvent("collapse" /* Collapse */, { bubbles: true, cancelable: true }));
   }
   static observedAttributes = ["name", "description", "color", "collapsed"];
   attributeChangedCallback(attributeName, _oldValue, newValue) {
