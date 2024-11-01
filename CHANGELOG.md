@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.5
+
+### Patch Changes
+
+- 2428f33: updated attributes to handle drag-drop after construction
+
 ## 0.0.4
 
 ### Patch Changes
