@@ -54,7 +54,7 @@ export class TaskListElement extends HTMLElement
         this.shadowRoot!.innerHTML = html;
         this.shadowRoot!.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
 
-        this.dragAndDropQueryParent = this.getRootNode() as Document|ShadowRoot;
+        this.dragAndDropQueryParent = (this.parentElement == null) ? this.getRootNode() as Document|ShadowRoot : this.parentElement.getRootNode() as Document|ShadowRoot;
 
         this.findPart('name').addEventListener('change', (event) =>
         {
