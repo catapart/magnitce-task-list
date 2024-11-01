@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.6
+
+### Patch Changes
+
+- 3cfc682: implemented drag-and-drop for dynamically added cards
+
 ## 0.0.5
 
 ### Patch Changes
