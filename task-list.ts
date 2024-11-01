@@ -100,7 +100,10 @@ export class TaskListElement extends HTMLElement
                 {
                     this.handledItems.add(children[i]);
                 }
-
+                if(this.getAttribute('drag-drop') != null)
+                {
+                    this.applyDragAndDropCardHandler(children[i] as HTMLElement);
+                }
             }
         });
     }
