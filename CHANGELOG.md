@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.10
+
+### Patch Changes
+
+- 3b83afd: fixed issue with duplicate drop handlers
+
 ## 0.0.9
 
 ### Patch Changes
