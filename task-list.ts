@@ -96,7 +96,7 @@ export class TaskListElement extends HTMLElement
                     this.dispatchEvent(new CustomEvent(TaskListEvents.Nested, { bubbles: true, cancelable: true, detail: { target: children[i] } }));
                     this.handledItems.add(children[i]);
                 }
-                if(children[i].tagName.toLowerCase() == this.TASKCARD_TAG_NAME.toLowerCase())
+                if(children[i].tagName.toLowerCase() == this.TASKCARD_TAG_NAME.toLowerCase() && (children[i] as HTMLElement).dataset.dragId == null)
                 {
                     this.handledItems.add(children[i]);
                     if(this.getAttribute('drag-drop') != null)
@@ -222,11 +222,11 @@ export class TaskListElement extends HTMLElement
         });
 
         
-        const childItems = [...this.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`)] as HTMLElement[];
-        for(let i = 0; i < childItems.length; i++)
-        {
-            this.applyDragAndDropCardHandler(childItems[i]);
-        }
+        // const childItems = [...this.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`)] as HTMLElement[];
+        // for(let i = 0; i < childItems.length; i++)
+        // {
+        //     this.applyDragAndDropCardHandler(childItems[i]);
+        // }
     }
     applyDragAndDropCardHandler(taskCard: HTMLElement)
     {
@@ -245,7 +245,8 @@ export class TaskListElement extends HTMLElement
         const order = childItems.indexOf(taskCard);
         taskCard.dataset.dragId = dragId;
         taskCard.dataset.order = order.toString();
-        (taskCard as any).previousParent = this;
+        taskCard.dataset.listIndex = [...this.parentElement!.children].indexOf(this).toString();
+        // (taskCard as any).previousParent = this;
     }
     /**
      * A function to generate an id for identifying the task that
@@ -259,11 +260,12 @@ export class TaskListElement extends HTMLElement
     #item_onDragEnd(event: Event|DragEvent)
     {
         event.preventDefault();
+        event.stopPropagation();
 
         const taskCard = event.currentTarget as HTMLElement;
         const previousOrder = parseInt(taskCard.dataset.order ?? "");
 
-        const previousParent = (taskCard as any).previousParent as TaskListElement;
+        const previousParent = this.parentElement!.children[parseInt(taskCard.dataset.listIndex!)] as TaskListElement;
         const currentParent = taskCard.parentElement as TaskListElement;
 
         const childItems = [...currentParent.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`)]

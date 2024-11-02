@@ -67,7 +67,7 @@ var TaskListElement = class extends HTMLElement {
           this.dispatchEvent(new CustomEvent("nested" /* Nested */, { bubbles: true, cancelable: true, detail: { target: children[i] } }));
           this.handledItems.add(children[i]);
         }
-        if (children[i].tagName.toLowerCase() == this.TASKCARD_TAG_NAME.toLowerCase()) {
+        if (children[i].tagName.toLowerCase() == this.TASKCARD_TAG_NAME.toLowerCase() && children[i].dataset.dragId == null) {
           this.handledItems.add(children[i]);
           if (this.getAttribute("drag-drop") != null) {
             this.applyDragAndDropCardHandler(children[i]);
@@ -140,10 +140,6 @@ var TaskListElement = class extends HTMLElement {
       event.stopPropagation();
       return false;
     });
-    const childItems = [...this.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`)];
-    for (let i = 0; i < childItems.length; i++) {
-      this.applyDragAndDropCardHandler(childItems[i]);
-    }
   }
   applyDragAndDropCardHandler(taskCard) {
     taskCard.setAttribute("draggable", "true");
@@ -157,7 +153,7 @@ var TaskListElement = class extends HTMLElement {
     const order = childItems.indexOf(taskCard);
     taskCard.dataset.dragId = dragId;
     taskCard.dataset.order = order.toString();
-    taskCard.previousParent = this;
+    taskCard.dataset.listIndex = [...this.parentElement.children].indexOf(this).toString();
   }
   /**
    * A function to generate an id for identifying the task that
@@ -169,9 +165,10 @@ var TaskListElement = class extends HTMLElement {
   }
   #item_onDragEnd(event) {
     event.preventDefault();
+    event.stopPropagation();
     const taskCard = event.currentTarget;
     const previousOrder = parseInt(taskCard.dataset.order ?? "");
-    const previousParent = taskCard.previousParent;
+    const previousParent = this.parentElement.children[parseInt(taskCard.dataset.listIndex)];
     const currentParent = taskCard.parentElement;
     const childItems = [...currentParent.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`)];
     const order = childItems.indexOf(taskCard);
