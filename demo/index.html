@@ -3,23 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task List Demo</title>
+    <title>&lt;task-list&gt; Demo</title>
     <link rel="stylesheet" href="./demo-page.css">
-</head>
-<body>
-    <main>
-        <h1>Overview</h1>
-        <div class="overview">
-            <div class="description">
-                <h2>Description</h2>
-                <p>The <code>&lt;task-list&gt;</code> element provides features and events for managing a list of "task" items.</p>
-                <p>"Tasks" are represented by <code>&lt;task-card&gt;</code> elements, by default, but can be any element type.</p>
-                <p>The <code>&lt;task-list&gt;</code> element dispatches events when changes occur and can provide drag-and-drop functionality for its items.</p>
-            </div>
+    <style>
+        article .example
+        {
+            display:flex;
+            align-items:flex-start;
+        }
+    </style>
+  </head>
+  <body>
+    <main class="centered-single-column">
+      <header class="full-width">
+        <div class="content centered-single-column">
+          <h1>The <code>task-list</code> element</h1>
         </div>
-        <h1>Examples</h1>
+      </header>
+        <article class="overview">
+            <h2>Overview</h2>
+            <p>The <code>&lt;task-list&gt;</code> element provides features and events for managing a list of "task" items.</p>
+            <p>"Tasks" are represented by <code>&lt;task-card&gt;</code> elements, by default, but can be any element type.</p>
+            <p>The <code>&lt;task-list&gt;</code> element dispatches events when changes occur and can provide drag-and-drop functionality for its items.</p>
+        </article>
         <article class="basic">
-            <header>Basic Example</header>
+            <h2>Basic Example</h2>
             <div class="description">
                 <p>The <code>&lt;task-list&gt;</code> element's color, name, and description can all be adjusted either in the document, or using the element's attribtues.</p>
                 <p>Add <code>&lt;task-card&gt;</code> elements to a <code>&lt;task-card&gt;</code> element using static HTML, or by injecting the element dynamically with javascript.</p>
@@ -59,7 +67,7 @@
             </script>
         </article>
         <article class="drag-and-drop">
-            <header>Drag and Drop</header>
+            <h2>Drag and Drop</h2>
             <div class="description">
                 <p>"Drag and Drop" functionality can be enabled on any <code>&lt;task-list&gt;</code> element by setting the <code>drag-drop</code> attribute <em>(does not require a value)</em>.</p>
                 <p>When using the drag and drop functionality, the lists will need to query for other list items that are available as potential siblings for the list item that is being dragged. To do this, the <code>&lt;task-list&gt;</code> element queries on a parent container. By default, this is the document's <code>&lt;body&gt;</code> element, but it can be set to any element that contains all of the <code>&lt;task-list&gt;</code>s you want to enable dragging and dropping for.</p>
@@ -86,7 +94,7 @@
             </div>
         </article>
         <article class="events">
-            <header>Events</header>
+            <h2>Events</h2>
             <div class="description">
                 <p>The <code>&lt;task-list&gt;</code> element dispatches a <code>change</code> event whenever it is changed. This includes when the properties, like name or color, change as well as when the list's items change order.</p>
                 <p>When the "Add" button is clicked, the <code>&lt;task-list&gt;</code> will dispatch and <code>add</code> event.</p>
@@ -95,7 +103,7 @@
                 <p>If the drag and drop feature is enabled, the <code>&lt;task-list&gt;</code> element will dispatch an <code>added</code> event whenever an item is dragged into the list, and a <code>removed</code> event whenever an item is dropped in a different list than it was dragged from.</p>
                 <p>In this example, each event fired by the <code>&lt;task-list&gt;</code> element is listened for and the event's data is logged out to the event log, below:</p>
             </div>
-            <div class="example" style="display:flex;align-items:flex-start;">
+            <div class="example">
                 <task-list name="List A" drag-drop>
                     <task-card value="Top"></task-card>
                     <task-card value="Middle"></task-card>
@@ -156,15 +164,18 @@
                 });
                 function logResult(result)
                 {
-                    const entry = document.createElement('li');
-                    entry.textContent = JSON.stringify(result, null, 2);
-                    entry.classList.add('entry');
-                    eventsLog.append(entry);
+                    const entryElement = document.createElement('li');
+                    const codeElement = document.createElement('code');
+                    const preElement = document.createElement('pre');
+                    preElement.textContent = JSON.stringify(result, null, 2);
+                    codeElement.append(preElement);
+                    entryElement.append(codeElement);
+                    eventsLog.append(entryElement);
                 }
             </script>
         </article>
         <article class="nested">
-            <header>Nested Lists</header>
+            <h2>Nested Lists</h2>
             <div class="description">
                 <p>A <code>&lt;task-list&gt;</code> element can be used as a child of another <code>&lt;task-list&gt;</code> element which is described here as "nesting".</p>
                 <p>Due to the default behavior of a child element to be rendered in the "items" slot (default slot), the nested <code>&lt;task-list&gt;</code> element would appear above the "Add" button, but below the other items in the list.</p>
@@ -218,7 +229,7 @@
             </script>
         </article>
         <article class="custom-collapse">
-            <header>Custom Collapse Behavior</header>
+            <h2>Custom Collapse Behavior</h2>
             <div class="description">
                 <p>The <code>&lt;task-list&gt;</code> element uses the shadow DOM for its layout, but it's elements can still be styled by using the <code>::part()</code> selector.</p>
                 <p>To demonstrate, the example below shows the default "collapse" behavior of hiding the items being re-styled to collapse the list horizontally, with an animation:</p>
