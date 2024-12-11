@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.11
+
+### Patch Changes
+
+- 1ee835c: fixed issue with horizontal expansion after collapsing
+
 ## 0.0.10
 
 ### Patch Changes
