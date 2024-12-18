@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.13
+
+### Patch Changes
+
+- cf440f8: forced hover styles
+
 ## 0.0.12
 
 ### Patch Changes
