@@ -77,6 +77,14 @@
     justify-content: center;
     gap: 5px;
 }
+[part="add-button"]:hover
+{
+    background: var(--button-highlight-background);
+    color: var(--button-highlight-text);
+    border: var(--button-highlight-border);
+    --icon-primary-color: var(--icon-highlight-primary-color);
+    --icon-secondary-color: var(--icon-highlight-secondary-color);
+}
 
 :host([collapsed]) > [part="tasks"]
 {
