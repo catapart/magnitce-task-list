@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.12
+
+### Patch Changes
+
+- 1300d22: added highlight styles for buttons and icons
+
 ## 0.0.11
 
 ### Patch Changes
