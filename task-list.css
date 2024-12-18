@@ -79,11 +79,12 @@
 }
 [part="add-button"]:hover
 {
-    background: var(--button-highlight-background);
-    color: var(--button-highlight-text);
-    border: var(--button-highlight-border);
-    --icon-primary-color: var(--icon-highlight-primary-color);
-    --icon-secondary-color: var(--icon-highlight-secondary-color);
+    /* !important to override non-hover styles; hover-styles will need to be marked imporant */
+    background: var(--button-highlight-background) !important;
+    color: var(--button-highlight-text) !important;
+    border: var(--button-highlight-border) !important;
+    --icon-primary-color: var(--icon-highlight-primary-color) !important;
+    --icon-secondary-color: var(--icon-highlight-secondary-color) !important;
 }
 
 :host([collapsed]) > [part="tasks"]
