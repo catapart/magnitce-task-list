@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.14
+
+### Patch Changes
+
+- ac06b39: removed button hover styles
+
 ## 0.0.13
 
 ### Patch Changes
