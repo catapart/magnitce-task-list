@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.15
+
+### Patch Changes
+
+- 834f51e: implemented setting part attributes from id and class attributes
+
 ## 0.0.14
 
 ### Patch Changes
