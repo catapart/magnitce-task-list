@@ -19,8 +19,8 @@ declare class TaskListElement extends HTMLElement {
     dragAndDropQueryParent: Document | ShadowRoot | HTMLElement;
     parentScopeSelector: string;
     componentParts: Map<string, HTMLElement>;
-    getPart<T extends HTMLElement = HTMLElement>(key: string): T;
-    findPart<T extends HTMLElement = HTMLElement>(key: string): T;
+    getElement<T extends HTMLElement = HTMLElement>(id: string): T;
+    findElement<T extends HTMLElement = HTMLElement>(id: string): T;
     handledItems: WeakSet<Element>;
     constructor();
     toggleHidden(): void;

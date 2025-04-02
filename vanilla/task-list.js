@@ -1,8 +1,8 @@
 // task-list.css?raw
-var task_list_default = ':host\n{\n    --border-color: rgb(95, 95, 95);\n    display: inline-block;\n    border: solid 1px var(--border-color);\n    border-radius: 3px;\n    padding: .5em;\n}\n@media (prefers-color-scheme: dark) \n{\n    :host\n    {\n        --border-color: rgb(71, 71, 71);\n    }\n}\n\n\n[part="header"]\n{\n    display: grid;\n    grid-template-columns: auto minmax(0, 1fr) auto;\n    align-items: center;\n    position: sticky;\n}\n\n[part="color-container"]\n{\n    display: contents;\n}\n\n[part="color"]\n{\n    padding: 0;\n    width: 12px;\n    min-height: 0;\n    height: auto;\n    border: solid 1px transparent;\n    align-self: stretch;\n}\n[part="color"]::-moz-color-swatch \n{\n    border: none;\n    padding: 0;\n    margin: 0;\n}\n\n[part="color"]::-webkit-color-swatch-wrapper \n{\n    padding: 0;\n    margin: 0;\n}\n\n[part="color"]::-webkit-color-swatch \n{\n    border: none;\n    padding: 0;\n    margin: 0;\n}\n\n[part="tasks"]\n{\n    list-style: none;\n    margin: 0;\n    padding: 0;\n    display: flex;\n    flex-direction: column;\n}\n\n[part="add-button"]\n{\n    margin-top: 1rem;\n    margin-inline: auto;\n    min-width: 100px;\n    align-self: center;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 5px;\n}\n\n:host([collapsed]) > [part="tasks"]\n{\n    overflow: hidden;\n    height: min-content;\n    height: 0;\n    opacity: 0;\n    padding: 0;\n    margin: 0;\n    border: none;\n    pointer-events: none;\n    user-select: none;\n}\n\n::slotted([data-drag-id])\n{\n    opacity: .7;\n    scale: .97;\n    transition: opacity 100ms ease, scale 100ms ease;\n}\n\n::slotted(task-list)\n{\n    margin-block: 7px;\n}';
+var task_list_default = ":host\n{\n    --border-color: rgb(95, 95, 95);\n    display: inline-block;\n    border: solid 1px var(--border-color);\n    border-radius: 3px;\n    padding: .5em;\n}\n@media (prefers-color-scheme: dark) \n{\n    :host\n    {\n        --border-color: rgb(71, 71, 71);\n    }\n}\n\n\n#header\n{\n    display: grid;\n    grid-template-columns: auto minmax(0, 1fr) auto;\n    align-items: center;\n    position: sticky;\n}\n\n#color-container\n{\n    display: contents;\n}\n\n#color\n{\n    padding: 0;\n    width: 12px;\n    min-height: 0;\n    height: auto;\n    border: solid 1px transparent;\n    align-self: stretch;\n}\n#color::-moz-color-swatch \n{\n    border: none;\n    padding: 0;\n    margin: 0;\n}\n\n#color::-webkit-color-swatch-wrapper \n{\n    padding: 0;\n    margin: 0;\n}\n\n#color::-webkit-color-swatch \n{\n    border: none;\n    padding: 0;\n    margin: 0;\n}\n\n#tasks\n{\n    list-style: none;\n    margin: 0;\n    padding: 0;\n    display: flex;\n    flex-direction: column;\n}\n\n#add-button\n{\n    margin-top: 1rem;\n    margin-inline: auto;\n    min-width: 100px;\n    align-self: center;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    gap: 5px;\n}\n\n:host([collapsed]) > #tasks\n{\n    overflow: hidden;\n    height: min-content;\n    height: 0;\n    opacity: 0;\n    padding: 0;\n    margin: 0;\n    border: none;\n    pointer-events: none;\n    user-select: none;\n}\n\n::slotted([data-drag-id])\n{\n    opacity: .7;\n    scale: .97;\n    transition: opacity 100ms ease, scale 100ms ease;\n}\n\n::slotted(task-list)\n{\n    margin-block: 7px;\n}";
 
 // task-list.html?raw
-var task_list_default2 = '<slot name="header">\n    <header part="header">\n        <label part="color-container" title="Color">\n            <input type="color" part="color" value="#919191" />\n        </label>\n        <input type="text" part="name" placeholder="List Name" />\n        <button type="button" part="collapse-button" title="Collapse">\n            <span part="collapse-icon">\u25B2</span>\n        </button>\n    </header>\n</slot>\n<ul part="tasks">\n    <slot></slot>\n</ul>\n<slot name="add-button"><button type="button" part="add-button" title="Add">\n    <span part="add-icon">&plus;</span>\n    <span part="add-label">Add Task</span>\n</button></slot>\n<slot name="footer"></slot>';
+var task_list_default2 = '<slot name="header">\n    <header id="header">\n        <label id="color-container" title="Color">\n            <input type="color" id="color" class="input" value="#919191" />\n        </label>\n        <input type="text" id="name" class="input" placeholder="List Name" />\n        <button type="button" id="collapse-button" class="button field-button" title="Collapse">\n            <span id="collapse-icon" class="icon">\u25B2</span>\n        </button>\n    </header>\n</slot>\n<ul id="tasks">\n    <slot></slot>\n</ul>\n<slot name="add-button">\n<button type="button" id="add-button" class="button" title="Add">\n    <span id="add-icon" class="icon">&plus;</span>\n    <span id="add-label">Add Task</span>\n</button>\n</slot>\n<slot name="footer"></slot>';
 
 // task-list.ts
 var COMPONENT_STYLESHEET = new CSSStyleSheet();
@@ -22,17 +22,17 @@ var TaskListElement = class extends HTMLElement {
   dragAndDropQueryParent;
   parentScopeSelector = "";
   componentParts = /* @__PURE__ */ new Map();
-  getPart(key) {
-    if (this.componentParts.get(key) == null) {
-      const part = this.shadowRoot.querySelector(`[part="${key}"]`);
+  getElement(id) {
+    if (this.componentParts.get(id) == null) {
+      const part = this.findElement(id);
       if (part != null) {
-        this.componentParts.set(key, part);
+        this.componentParts.set(id, part);
       }
     }
-    return this.componentParts.get(key);
+    return this.componentParts.get(id);
   }
-  findPart(key) {
-    return this.shadowRoot.querySelector(`[part="${key}"]`);
+  findElement(id) {
+    return this.shadowRoot.getElementById(id);
   }
   handledItems = /* @__PURE__ */ new WeakSet();
   constructor() {
@@ -41,16 +41,16 @@ var TaskListElement = class extends HTMLElement {
     this.shadowRoot.innerHTML = task_list_default2;
     this.shadowRoot.adoptedStyleSheets.push(COMPONENT_STYLESHEET);
     this.dragAndDropQueryParent = this.parentElement == null ? this.getRootNode() : this.parentElement.getRootNode();
-    this.findPart("name").addEventListener("change", (event) => {
+    this.findElement("name").addEventListener("change", (event) => {
       this.dispatchEvent(new CustomEvent("change" /* Change */, { bubbles: true, cancelable: true, detail: { target: event.target } }));
     });
-    this.findPart("color").addEventListener("change", (event) => {
+    this.findElement("color").addEventListener("change", (event) => {
       this.dispatchEvent(new CustomEvent("change" /* Change */, { bubbles: true, cancelable: true, detail: { target: event.target } }));
     });
-    this.findPart("collapse-button").addEventListener("click", () => {
+    this.findElement("collapse-button").addEventListener("click", () => {
       this.toggleHidden();
     });
-    this.findPart("add-button").addEventListener("click", () => {
+    this.findElement("add-button").addEventListener("click", () => {
       const order = this.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`).length;
       this.dispatchEvent(new CustomEvent("add" /* Add */, { bubbles: true, cancelable: true, detail: { order } }));
     });
@@ -75,6 +75,17 @@ var TaskListElement = class extends HTMLElement {
         }
       }
     });
+    this.#applyPartAttributes();
+  }
+  #applyPartAttributes() {
+    const identifiedElements = [...this.shadowRoot.querySelectorAll("[id]")];
+    for (let i = 0; i < identifiedElements.length; i++) {
+      identifiedElements[i].part.add(identifiedElements[i].id);
+    }
+    const classedElements = [...this.shadowRoot.querySelectorAll("[class]")];
+    for (let i = 0; i < classedElements.length; i++) {
+      classedElements[i].part.add(...classedElements[i].classList);
+    }
   }
   toggleHidden() {
     if (this.getAttribute("collapsed") == null) {
@@ -84,23 +95,23 @@ var TaskListElement = class extends HTMLElement {
     }
   }
   hide() {
-    this.findPart("collapse-icon").textContent = "\u25BC";
+    this.findElement("collapse-icon").textContent = "\u25BC";
     this.setAttribute("collapsed", "");
     this.dispatchEvent(new CustomEvent("collapse" /* Collapse */, { bubbles: true, cancelable: true }));
   }
   show() {
-    this.findPart("collapse-icon").textContent = "\u25B2";
+    this.findElement("collapse-icon").textContent = "\u25B2";
     this.removeAttribute("collapsed");
     this.dispatchEvent(new CustomEvent("collapse" /* Collapse */, { bubbles: true, cancelable: true }));
   }
   static observedAttributes = ["name", "description", "color", "collapsed", "drag-drop"];
   attributeChangedCallback(attributeName, oldValue, newValue) {
     if (attributeName == "name") {
-      this.findPart("name").value = newValue;
+      this.findElement("name").value = newValue;
     } else if (attributeName == "description") {
-      this.findPart("header").title = newValue;
+      this.findElement("header").title = newValue;
     } else if (attributeName == "color") {
-      this.findPart("color").value = newValue;
+      this.findElement("color").value = newValue;
     } else if (attributeName == "collapsed") {
       if (newValue === "true") {
         this.classList.add("collapsed");

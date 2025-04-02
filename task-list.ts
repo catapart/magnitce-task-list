@@ -33,17 +33,17 @@ export class TaskListElement extends HTMLElement
     parentScopeSelector: string = '';
 
     componentParts: Map<string, HTMLElement> = new Map();
-    getPart<T extends HTMLElement = HTMLElement>(key: string)
+    getElement<T extends HTMLElement = HTMLElement>(id: string)
     {
-        if(this.componentParts.get(key) == null)
+        if(this.componentParts.get(id) == null)
         {
-            const part = this.shadowRoot!.querySelector(`[part="${key}"]`) as HTMLElement;
-            if(part != null) { this.componentParts.set(key, part); }
+            const part = this.findElement(id);
+            if(part != null) { this.componentParts.set(id, part); }
         }
 
-        return this.componentParts.get(key) as T;
+        return this.componentParts.get(id) as T;
     }
-    findPart<T extends HTMLElement = HTMLElement>(key: string) { return this.shadowRoot!.querySelector(`[part="${key}"]`) as T; }
+    findElement<T extends HTMLElement = HTMLElement>(id: string) { return this.shadowRoot!.getElementById(id) as T; }
 
     handledItems: WeakSet<Element> = new WeakSet();
 
@@ -56,21 +56,21 @@ export class TaskListElement extends HTMLElement
 
         this.dragAndDropQueryParent = (this.parentElement == null) ? this.getRootNode() as Document|ShadowRoot : this.parentElement.getRootNode() as Document|ShadowRoot;
 
-        this.findPart('name').addEventListener('change', (event) =>
+        this.findElement('name').addEventListener('change', (event) =>
         {
             this.dispatchEvent(new CustomEvent(TaskListEvents.Change, { bubbles: true, cancelable: true, detail: { target: event.target }}));
         });
-        this.findPart('color').addEventListener('change', (event) =>
+        this.findElement('color').addEventListener('change', (event) =>
         {
             this.dispatchEvent(new CustomEvent(TaskListEvents.Change, { bubbles: true, cancelable: true, detail: { target: event.target }}));
         });
 
-        this.findPart('collapse-button').addEventListener('click', () =>
+        this.findElement('collapse-button').addEventListener('click', () =>
         {
             this.toggleHidden();
         });
 
-        this.findPart('add-button').addEventListener('click', () =>
+        this.findElement('add-button').addEventListener('click', () =>
         {
             const order = this.querySelectorAll(`:scope > ${this.TASKCARD_TAG_NAME}`).length;
             this.dispatchEvent(new CustomEvent(TaskListEvents.Add, { bubbles: true, cancelable: true, detail: { order } }));
@@ -106,6 +106,20 @@ export class TaskListElement extends HTMLElement
                 }
             }
         });
+        this.#applyPartAttributes();
+    }
+    #applyPartAttributes()
+    {
+        const identifiedElements = [...this.shadowRoot!.querySelectorAll('[id]')];
+        for(let i = 0; i < identifiedElements.length; i++)
+        {
+            identifiedElements[i].part.add(identifiedElements[i].id);
+        }
+        const classedElements = [...this.shadowRoot!.querySelectorAll('[class]')];
+        for(let i = 0; i < classedElements.length; i++)
+        {
+            classedElements[i].part.add(...classedElements[i].classList);
+        }
     }
 
     toggleHidden()
@@ -116,13 +130,13 @@ export class TaskListElement extends HTMLElement
 
     hide()
     {
-        this.findPart('collapse-icon').textContent = '▼';
+        this.findElement('collapse-icon').textContent = '▼';
         this.setAttribute('collapsed', '');
         this.dispatchEvent(new CustomEvent(TaskListEvents.Collapse, { bubbles: true, cancelable: true }));
     }
     show()
     {
-        this.findPart('collapse-icon').textContent = '▲';
+        this.findElement('collapse-icon').textContent = '▲';
         this.removeAttribute('collapsed');
         this.dispatchEvent(new CustomEvent(TaskListEvents.Collapse, { bubbles: true, cancelable: true }));
     }
@@ -136,15 +150,15 @@ export class TaskListElement extends HTMLElement
 
         if(attributeName == 'name')
         {
-            this.findPart<HTMLInputElement>('name').value = newValue;
+            this.findElement<HTMLInputElement>('name').value = newValue;
         }
         else if(attributeName == 'description')
         {
-            this.findPart('header').title = newValue;
+            this.findElement('header').title = newValue;
         }
         else if(attributeName == 'color')
         {
-            this.findPart<HTMLInputElement>('color').value = newValue;
+            this.findElement<HTMLInputElement>('color').value = newValue;
         }
         else if(attributeName == 'collapsed')
         {

@@ -1,19 +1,21 @@
 <slot name="header">
-    <header part="header">
-        <label part="color-container" title="Color">
-            <input type="color" part="color" value="#919191" />
+    <header id="header">
+        <label id="color-container" title="Color">
+            <input type="color" id="color" class="input" value="#919191" />
         </label>
-        <input type="text" part="name" placeholder="List Name" />
-        <button type="button" part="collapse-button" title="Collapse">
-            <span part="collapse-icon">▲</span>
+        <input type="text" id="name" class="input" placeholder="List Name" />
+        <button type="button" id="collapse-button" class="button field-button" title="Collapse">
+            <span id="collapse-icon" class="icon">▲</span>
         </button>
     </header>
 </slot>
-<ul part="tasks">
+<ul id="tasks">
     <slot></slot>
 </ul>
-<slot name="add-button"><button type="button" part="add-button" title="Add">
-    <span part="add-icon">&plus;</span>
-    <span part="add-label">Add Task</span>
-</button></slot>
+<slot name="add-button">
+<button type="button" id="add-button" class="button" title="Add">
+    <span id="add-icon" class="icon">&plus;</span>
+    <span id="add-label">Add Task</span>
+</button>
+</slot>
 <slot name="footer"></slot>
