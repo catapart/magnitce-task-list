@@ -12,6 +12,7 @@
   "scripts": {
     "build": "tsup task-list.ts --format cjs,esm --dts --clean",
     "build-vanilla": "tsup task-list.ts --format esm --dts --clean --outDir ./vanilla",
+    "dev-pack": "npm run build-vanilla",
     "minify": "tsup task-list.ts --format esm --config ./tsup.config.min.ts --outDir ./vanilla --minify",
     "lint": "tsup task-list.ts --format esm --tsconfig ./tsconfig.lint.json",
     "package": "npm run build && npm run build-vanilla && npm run minify",

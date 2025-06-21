@@ -5,6 +5,7 @@
     border: solid 1px var(--border-color);
     border-radius: 3px;
     padding: .5em;
+    overflow-y: scroll;
 }
 #header:has(#name:focus)
 {
@@ -26,6 +27,7 @@
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     position: sticky;
+    top: 0;
 }
 
 #color-container
