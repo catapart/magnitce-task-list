@@ -6,7 +6,7 @@
     border-radius: 3px;
     padding: .5em;
 }
-:host:has(#name:focus)
+#header:has(#name:focus)
 {
     outline: var(--list-name-focus-outline);
 }
