@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.17
+
+### Patch Changes
+
+- 18bbe36: fixed issue with sticky header not sticking
+
 ## 0.0.16
 
 ### Patch Changes
