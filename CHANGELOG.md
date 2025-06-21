@@ -1,5 +1,11 @@
 # @magnit-ce/task-list
 
+## 0.0.16
+
+### Patch Changes
+
+- bcdb7b5: added headline outline style variable
+
 ## 0.0.15
 
 ### Patch Changes
