@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        html {
+            color-scheme: light dark;
+        }
+
+        body {
+            display: grid;
+            overflow: hidden;
+        }
+
+        test-runner::part(subject)
+        {
+            display: grid;
+            overflow: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <test-runner>
+
+        <div class="subject">
+            <article class="basic">
+                <h2>Basic Example</h2>
+                <div class="description">
+                    <p>The <code>&lt;task-list&gt;</code> element's color, name, and description can all be adjusted either in the document, or using the element's attribtues.</p>
+                    <p>Add <code>&lt;task-card&gt;</code> elements to a <code>&lt;task-card&gt;</code> element using static HTML, or by injecting the element dynamically with javascript.</p>
+                    <p>In this example, the <code>&lt;task-list&gt;</code>'s <code>add</code> event is being handled to add new tasks. Each task is also having its <code>remove</code> event handled to extract the element from the DOM:</p>
+                </div>
+                <div class="example">
+                    <task-list>
+                        <task-card value="Top"></task-card>
+                        <task-card value="Middle"></task-card>
+                        <task-card value="Bottom"></task-card>
+                    </task-list>
+                </div>
+                <script type="module">
+                    const basicExample = document.querySelector('article.basic');
+                    const basicTaskList = basicExample.querySelector('task-list');
+                    document.addEventListener('DOMContentLoaded', () =>
+                    {
+                        basicTaskList.addEventListener('add', () =>
+                        {
+                            const task = document.createElement('task-card');
+                            task.addEventListener('remove', basic_task_onRemove);
+                            basicTaskList.append(task);
+                        });
+
+                        const tasks = [...basicTaskList.querySelectorAll('task-card')];
+                        for(let i = 0; i < tasks.length; i++)
+                        {
+                            tasks[i].addEventListener('remove', basic_task_onRemove);
+                        }
+                    });
+
+                    function basic_task_onRemove(event)
+                    {
+                        const task = event.currentTarget;
+                        task.remove();
+                    }
+                </script>
+            </article>
+            <article class="drag-and-drop">
+                <h2>Drag and Drop</h2>
+                <div class="description">
+                    <p>"Drag and Drop" functionality can be enabled on any <code>&lt;task-list&gt;</code> element by setting the <code>drag-drop</code> attribute <em>(does not require a value)</em>.</p>
+                    <p>When using the drag and drop functionality, the lists will need to query for other list items that are available as potential siblings for the list item that is being dragged. To do this, the <code>&lt;task-list&gt;</code> element queries on a parent container. By default, this is the document's <code>&lt;body&gt;</code> element, but it can be set to any element that contains all of the <code>&lt;task-list&gt;</code>s you want to enable dragging and dropping for.</p>
+                    <p>You can see a demonstration of this by dragging an item from this "Drag and Drop" example, down to the "Events" example below, or vice versa.</p>
+                    <p>By contrast, dragging and dropping does not work correctly between the "Nested" example and any other example, because the "Nested" example explicitly limits the parent scope.</p>
+                    <p>In this example, the <code>&lt;task-list&gt;</code>s each have a <code>drag-drop</code> attribute, and so any of their items can be mixed and matched by dragging them. Note that the attribute is the only requirement; no additional javascript is needed to handle the drag and drop features:</p>
+                </div>
+                <div class="example">
+                    <task-list name="List A" drag-drop>
+                        <task-card value="Top"></task-card>
+                        <task-card value="Middle"></task-card>
+                        <task-card value="Bottom"></task-card>
+                    </task-list>
+                    <task-list name="List B" drag-drop>
+                        <task-card value="High"></task-card>
+                        <task-card value="Medium"></task-card>
+                        <task-card value="Low"></task-card>
+                    </task-list>
+                    <task-list name="List C" drag-drop>
+                        <task-card value="Up"></task-card>
+                        <task-card value="Center"></task-card>
+                        <task-card value="Down"></task-card>
+                    </task-list>
+                </div>
+            </article>
+            <article class="events">
+                <h2>Events</h2>
+                <div class="description">
+                    <p>The <code>&lt;task-list&gt;</code> element dispatches a <code>change</code> event whenever it is changed. This includes when the properties, like name or color, change as well as when the list's items change order.</p>
+                    <p>When the "Add" button is clicked, the <code>&lt;task-list&gt;</code> will dispatch and <code>add</code> event.</p>
+                    <p>When the list's <code>collapsed</code> state changes, like when the button toggles it, the <code>collapsed</code> event will be dispatched.</p>
+                    <p>If a <code>&lt;task-list&gt;</code> element is added as a child to another <code>&lt;task-list&gt;</code> element, the top-level <code>&lt;task-list&gt;</code> element will dispatch a <code>nested</code> event.</p>
+                    <p>If the drag and drop feature is enabled, the <code>&lt;task-list&gt;</code> element will dispatch an <code>added</code> event whenever an item is dragged into the list, and a <code>removed</code> event whenever an item is dropped in a different list than it was dragged from.</p>
+                    <p>In this example, each event fired by the <code>&lt;task-list&gt;</code> element is listened for and the event's data is logged out to the event log, below:</p>
+                </div>
+                <div class="example">
+                    <task-list name="List A" drag-drop>
+                        <task-card value="Top"></task-card>
+                        <task-card value="Middle"></task-card>
+                        <task-card value="Bottom"></task-card>
+                    </task-list>
+                    <task-list name="List B" drag-drop>
+                        <task-card value="High"></task-card>
+                        <task-card value="Medium"></task-card>
+                        <task-card value="Low"></task-card>
+                    </task-list>
+                    <task-list name="List C" drag-drop>
+                        <task-card value="Up"></task-card>
+                        <task-card value="Center"></task-card>
+                        <task-card value="Down"></task-card>
+                    </task-list>
+                </div>
+                <div class="log">
+                    <header>
+                        <span class="title">Event Log</span>
+                    </header>
+                    <ul></ul>
+                </div>
+                <script type="module">
+                    const eventsExample = document.querySelector('article.events');
+                    const eventsLog = document.querySelector('article.events .log ul')
+                    document.addEventListener('DOMContentLoaded', () =>
+                    {
+                        const taskLists = [...eventsExample.querySelectorAll('task-list')];
+                        for(let i = 0; i < taskLists.length; i++)
+                        {
+                            const taskList = taskLists[i];
+
+                            taskList.addEventListener('change', (event) =>
+                            {
+                                logResult({ eventType: 'change', detail: { order: event.detail.order, previousOrder: event.detail.previousOrder, target: event.detail.target.tagName } });
+                            });
+                            taskList.addEventListener('add', (event) =>
+                            {
+                                logResult({ eventType: 'add', detail: event.detail });
+                            });
+                            taskList.addEventListener('nested', (event) =>
+                            {
+                                logResult({ eventType: 'nested', detail: event.detail });
+                            });
+                            taskList.addEventListener('added', (event) =>
+                            {
+                                logResult({ eventType: 'added', detail: { order: event.detail.order, target: event.detail.target.tagName } });
+                            });
+                            taskList.addEventListener('removed', (event) =>
+                            {
+                                logResult({ eventType: 'removed', detail: { order: event.detail.order, target: event.detail.target.tagName } });
+                            });
+                            taskList.addEventListener('collapse', (event) =>
+                            {
+                                logResult({ eventType: 'collapse', detail: event.detail });
+                            });
+                        }
+                    });
+                    function logResult(result)
+                    {
+                        const entryElement = document.createElement('li');
+                        const codeElement = document.createElement('code');
+                        const preElement = document.createElement('pre');
+                        preElement.textContent = JSON.stringify(result, null, 2);
+                        codeElement.append(preElement);
+                        entryElement.append(codeElement);
+                        eventsLog.append(entryElement);
+                    }
+                </script>
+            </article>
+            <article class="nested">
+                <h2>Nested Lists</h2>
+                <div class="description">
+                    <p>A <code>&lt;task-list&gt;</code> element can be used as a child of another <code>&lt;task-list&gt;</code> element which is described here as "nesting".</p>
+                    <p>Due to the default behavior of a child element to be rendered in the "items" slot (default slot), the nested <code>&lt;task-list&gt;</code> element would appear above the "Add" button, but below the other items in the list.</p>
+                    <p>The placement of a nested <code>&lt;task-list&gt;</code> element in the items list may cause confusions because at the end of the nested lists, there would be multiple "Add" buttons, each corresponding to a nesting level.</p>
+                    <p>To circumvent that issue, nested <code>&lt;task-list&gt;</code> elements can set their <code>slot</code> attributes to <code>footer</code>, which will cause them to render below the "Add" button in the parent list, as seen in the example below.</p>
+                    <p>In this example, each of the <code>&lt;task-list&gt;</code> elements have drag and drop enabled, but they are scoped to only the lists in this example:</p>
+                </div>
+                <div class="example" style="display:flex;align-items:flex-start;">
+                    <task-list name="List A" drag-drop>
+                        <task-card value="Top"></task-card>
+                        <task-card value="Middle"></task-card>
+                        <task-card value="Bottom"></task-card>
+                        <task-list slot="footer" name="List B" drag-drop>
+                            <task-card value="High"></task-card>
+                            <task-card value="Medium"></task-card>
+                            <task-card value="Low"></task-card>
+                            <task-list slot="footer" name="List C" drag-drop>
+                                <task-card value="Up"></task-card>
+                                <task-card value="Center"></task-card>
+                                <task-card value="Down"></task-card>
+                            </task-list>
+                        </task-list>
+                    </task-list>
+                    <task-list name="List D" drag-drop>
+                        <task-card value="Top"></task-card>
+                        <task-card value="Middle"></task-card>
+                        <task-card value="Bottom"></task-card>
+                        <task-list slot="footer" name="List E" drag-drop>
+                            <task-card value="High"></task-card>
+                            <task-card value="Medium"></task-card>
+                            <task-card value="Low"></task-card>
+                            <task-list slot="footer" name="List F" drag-drop>
+                                <task-card value="Up"></task-card>
+                                <task-card value="Center"></task-card>
+                                <task-card value="Down"></task-card>
+                            </task-list>
+                        </task-list>
+                    </task-list>
+                </div>
+                <script type="module">
+                    const nestedExample = document.querySelector('article.nested');
+                    document.addEventListener('DOMContentLoaded', () =>
+                    {
+                        const taskLists = [...nestedExample.querySelectorAll('task-list')];
+                        for(let i = 0; i < taskLists.length; i++)
+                        {
+                            const taskList = taskLists[i];
+                            taskList.dragAndDropQueryParent = nestedExample;
+                        }
+                    });
+                </script>
+            </article>
+            <article class="custom-collapse">
+                <h2>Custom Collapse Behavior</h2>
+                <div class="description">
+                    <p>The <code>&lt;task-list&gt;</code> element uses the shadow DOM for its layout, but it's elements can still be styled by using the <code>::part()</code> selector.</p>
+                    <p>To demonstrate, the example below shows the default "collapse" behavior of hiding the items being re-styled to collapse the list horizontally, with an animation:</p>
+                </div>
+                <div class="example" style="display:grid;align-items:flex-start;grid-template-columns: auto auto auto;">
+                    <task-list name="List A" color="#a8f94e">
+                        <task-card value="Top"></task-card>
+                        <task-card value="Middle"></task-card>
+                        <task-card value="Bottom"></task-card>
+                    </task-list>
+                    <task-list name="List B" color="#79d50c">
+                        <task-card value="High"></task-card>
+                        <task-card value="Medium"></task-card>
+                        <task-card value="Low"></task-card>
+                    </task-list>
+                    <task-list name="List C" color="#4c701f">
+                        <task-card value="Up"></task-card>
+                        <task-card value="Center"></task-card>
+                        <task-card value="Down"></task-card>
+                    </task-list>
+                </div>
+                <style>
+                    .custom-collapse task-list
+                    {
+                        width: auto;
+                        width: calc-size(auto, size);
+                        transition: width 200ms ease;
+                    }
+                    
+                    .custom-collapse task-list[collapsed]
+                    {
+                        /* width: 50px; */
+                        width: min-content;
+                    }
+
+                    .custom-collapse task-list[collapsed]::part(tasks)
+                    {
+                        /* prevent default behavior of setting height to 0 */
+                        height: auto;
+
+                        width: 0;
+                        transition: all 200ms ease;
+                    }
+                    .custom-collapse task-list::part(name)
+                    {
+                        width: auto;
+                        width: calc-size(auto, size);
+                        transition: width 200ms ease;           
+                    }
+                    .custom-collapse task-list[collapsed]::part(name)
+                    {
+                        width: 0;
+                        padding: 0;
+                        margin: 0;
+                        text-overflow: hidden;
+                        border: none;
+                        transition: all 200ms ease;                    
+                    }
+                    .custom-collapse task-list::part(collapse-icon)
+                    {
+                        display: inline-block;
+                        rotate: -90deg;
+                    }
+                    .custom-collapse task-list[collapsed]::part(collapse-icon)
+                    {
+                        rotate: -90deg;
+                    }
+                    .custom-collapse task-list[collapsed]::part(add-button)
+                    {
+                        min-width: auto;
+                    }
+                    .custom-collapse task-list[collapsed]::part(add-label)
+                    {
+                        display: none;
+                    }
+                </style>
+            </article>
+        </div>
+        <!-- <task-list name="List A" drag-drop> <task-card value="Top"></task-card> <task-card value="Middle"></task-card> <task-card value="Bottom"></task-card> </task-list> <task-list name="List B" drag-drop> <task-card value="High"></task-card> <task-card value="Medium"></task-card> <task-card value="Low"></task-card> </task-list> <task-list name="List C" drag-drop> <task-card value="Up"></task-card> <task-card value="Center"></task-card> <task-card value="Down"></task-card> </task-list> -->
+    </test-runner>
+
+    <script type="module" src="./dev.ts"></script>
+</body>
+
+</html>

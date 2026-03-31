@@ -4,6 +4,7 @@ import html from './task-list.html?raw';
 const COMPONENT_STYLESHEET = new CSSStyleSheet();
 COMPONENT_STYLESHEET.replaceSync(style);
 
+import '@magnit-ce/task-card';
 
 export type TaskListAttributes = 
 {
@@ -13,15 +14,16 @@ export type TaskListAttributes =
     collapsed?: boolean,
 };
 
-export enum TaskListEvents
+export const TaskListEvents =
 {
-    Change = 'change',
-    Add = 'add',
-    Added = 'added',
-    Removed = 'removed',
-    Nested = 'nested',
-    Collapse = 'collapse'
-};
+    Change: 'change',
+    Add: 'add',
+    Added: 'added',
+    Removed: 'removed',
+    Nested: 'nested',
+    Collapse: 'collapse'
+} as const;
+export type TaskListEventsType = typeof TaskListEvents[keyof typeof TaskListEvents];
 
 
 export const COMPONENT_TAG_NAME = 'task-list';
@@ -316,3 +318,5 @@ if(customElements.get(COMPONENT_TAG_NAME) == null)
 {
     customElements.define(COMPONENT_TAG_NAME, TaskListElement);
 }
+
+export * from '@magnit-ce/task-card'

@@ -1,273 +1,128 @@
-# magnitce-task-list
-A custom `HTMLElement` that provides features and events for managing custom [`<task-card>`](https://github.com/catapart/magnitce-task-card) elements.
+# Warning - Non-production package
+> [!WARNING]  
+> This project is being prepared for production, but is not ready to be used as a dependency for anything. There will be breaking changes and unrecoverable states. Do not use until this warning has been removed.
+> When the library reaches the `1.0.0` designation, that will be a production package. From that point, you can use the major version number (`1` in `1.0.0`) to recognize when breaking changes are introduced.
 
-Package size: ~11kb minified, ~14kb verbose.
-
-## Quick Reference
-```html
-<task-list>
-    <task-card value="Dishes" is-finished="true"></task-card>
-    <task-card value="Laundry" color="#FF00FF"></task-card>
-    <task-card value="Sweeping"></task-card>
-    <task-card value="Cocktail (margarita:)">
-        <textarea slot="description">
-    1 part  lime juice
-    1 part  orange liqueur (grand marnier/cointreau/triple sec/etc)
-    3 parts tequila
-
-    1 twist of lime peel
-    1 tbsp rimming salt
-
-    1/2 shaker of ice
-    1 serving glass "on the rocks" (a serving amount of ice)
-
-    combine lime juice, orange liquer, and tequila in shaker
-    shake well for 10-20 seconds
-    strain liquid into serving glass
-    express oils from lime peel and wet serving glass rim with them
-    apply rimming salt to wetted rim of glass
-        </textarea>
-    </task-card>
-<task-list>
-<script type="module" src="/path/to/task-list[.min].js"></script>
-```
-
-## Demos
-https://catapart.github.io/magnitce-task-list/demo/
-
-## Support
-- Firefox
-- Chrome
-- Edge
-- <s>Safari</s> (Has not been tested; should be supported, based on custom element support)
-
-## Getting Started
- 1. [Install/Reference the library](#referenceinstall)
-
-### Reference/Install
-#### HTML Import (not required for vanilla js/ts; alternative to import statement)
-```html
-<script type="module" src="/path/to/task-list[.min].js"></script>
-```
-#### npm
-```cmd
-npm install @magnit-ce/task-list
-```
-
-### Import
-#### Vanilla js/ts
-```js
-import "/path/to/task-list[.min].js"; // if you didn't reference from a <script>, reference with an import like this
-
-import { TaskCardElement, TaskListElement } from "/path/to/task-list[.min].js";
-```
-#### npm
-```js
-import "@magnit-ce/task-list"; // if you didn't reference from a <script>, reference with an import like this
-
-import { TaskCardElement, TaskListElement } from "@magnit-ce/task-list";
-```
-
----
----
----
+# The `task-list` Custom Element
 
 ## Overview
-The `<task-list>` element is a container element for [`<task-card>`](https://github.com/catapart/magnitce-task-card) elements. It provides some basic task list features, like a customizeable header, an add button, the ability to show and hide its items, and a drag-and-drop feature. It also dispatches events when the list contents change.
+A custom html element that provides sorting and management for custom task-card elements.
 
-## Attributes
-|Attribute|Effect|
-|-|-|
-|`name`|Sets the title of the list. Displays as the value of the text input in the list header.|
-|`description`|Sets the title text of the list's header. Displays as "title text". Visible upon hovering a pointer over the header.|
-|`color`|A color to represent the list. Displays as the value of the color input in the list header. A categorization feature.|
-|`collapsed`|If `true`, hides the list items. If `false`, displays the list items.|
-|`drag-drop`|Enables drag-and-drop functionality for the list items.|
+|||||
+|-|-|-|-|
+|Package size, **verbose**:|~14kb|Package size, **minified**:|~11kb|
 
-## Drag and Drop
-The `<task-list>` element implements drag-and-drop features by using the native browser events `dragstart`, `dragend`, `dragover`, and `drop`. These events require non-trivial handlers, so the library expects [`<task-card>`](https://github.com/catapart/magnitce-task-card) elements as its list-items. While custom item types can be used, it is not recommended and may not have all of the features.
 
-### `dragAndDropQueryParent` and `parentScopeSelector`
-Facilitating moving items between lists means querying outside of the `<task-list>` elements, themselves.  
-The `dragAndDropQueryParent` is an element which has a `querySelector()` function run on it to determine valid items for the drag target's (possible) siblings. In effect, this `dragAndDropQueryParent` is any element that contains all of the `<task-list>` elements which items will be able to be dragged-and-dropped between. By default, the `dragAndDropQueryParent` is set to the document's `<body>` element. This means that any `<task-list>` in the document will be considered as a drop target.  
-To scope the query smaller, set the `dragAndDropQueryParent` to the first ancestor element that contains all of the `<task-list>` elements on your page.
 
-The `parentScopeSelector` serves the same function as the `dragAndDropQueryParent`, but it is a string value that is used in the selector query. For reference, this is how the actual query looks:
-```js
-this.dragAndDropQueryParent.querySelector(`${this.parentScopeSelector}${this.TASKCARD_TAG_NAME}[data-drag-id]`);
-```
-From that snippet, you can see that the two features can actually work together, if you need to dynamically narrow scope from a larger parent scope. But the simplification of all of this is that you can use either an element reference, or a css selector, or both, as a away to scope the `<task-list>` elements when dragging and dropping.
-
-### Customization
-#### `[TaskListElement].TASKCARD_TAG_NAME`
-The `TASKCARD_TAG_NAME` property of a `<task-list>` element determines the string that will be used to match "card" child elements. By default, this value is set to `<task-card>`, with the expectation of matching [`<task-card>`](https://github.com/catapart/magnitce-task-card) elements.  
-To be clear: this is only referenced by the drag-and-drop functionality and can otherwise be ignored.
-
-To use a custom list item, replace the `TASKCARD_TAG_NAME` with whatever the tag name is for the custom list item element.
-
-## Parts
-The `<task-list>` element uses the `part` attribute to expose its shadow DOM content to the light DOM both for styling and selecting in javascript.
-
-|Part Name|Description|
-|-|-|
-|`header`|A `<header>` element containting inputs for the list's color and name, as well as a collapse button, and a `title` attribute set to the list's `description` property.|
-|`color-container`|A container for the list's color input. May be used, with custom styling, to display the color while hiding the color input, itself.|
-|`color`|An `<input type="color">` element that displays the list's `color` property.|
-|`name`|An `<input type="text">` element that displays the list's `name` property.|
-|`collapse-button`|A button that toggles the list's collapsed status.|
-|`collapse-icon`|An icon on the collapse button to indicate "collapse". Default is `▲`.|
-|`tasks`|The `<ul>` element containing all of the list's items.|
-|`add-button`|A button that dispatches the `add` event.|
-|`add-icon`|An icon on the add button to indicate "add". Default is `+`.|
-|`add-label`|The text on the add button to indicate "add". Default is `Add Task`.|
-
-### `findPart()` and `getPart()`
-In addition to being able to select an element from the `<task-list>` element's shadowRoot reference, this element provides a function for selecting one of its parts by using the `findPart()` function.
-
-In this example, the same part is selected with the default shadowRoot reference, and by using the `findPart()` function:
-```js
-const  = document.querySelector('header');
-findPart('').addEventListener('input', (event) =>
-{
-    // queries the shadowRoot for an element with a part attribute of ""
-});
-shadowRoot.querySelector('[part="header"]').addEventListener('input', (event) =>
-{
-    // queries the shadowRoot for an element with a part attribute of ""
-});
-```
-*(note: these two calls do exactly the same thing)*
-
-If one of this element's parts are going to be referenced frequently, the `<task-list>` element's `getPart()` function can be used instead.
-
-With `getPart()`, the element will be cached in RAM for immediate access witout having to perform a DOM query on the shadowRoot.
-```js
-const  = document.querySelector('');
-taskCard.getPart(header'').addEventListener('input', (event) =>
-{
-    // gets cached element and, if null: queries the shadowRoot for an element with a part attribute of ""
-});
-taskCard.shadowRoot.querySelector('[part="header"]').addEventListener('input', (event) =>
-{
-    // queries the shadowRoot for an element with a part attribute of ""
-});
-```
-*(note: these two calls do two different things)*
-
-For event-based or initialization code, `findPart()` should be fine for performance. But if the `<task-list>` element is going to be updated multiple times in a row, the `getPart()` function will provide a smoother experience.
-
-## Events
-### `change`
-#### Detail
-```js
-{ 
-  target: HTMLElement,
-  order?: number,
-  previousOrder?: number,
-}
-```
-#### Description
-Fires when either the list's name or color changes, and whenever a list item is dropped in the same list it was dragged from.
-- `order`:  
-provides an integer of the item's index in the `<task-list>` element.
-- `previousOrder`:  
-provides an integer of the item's index in the `<task-list>` element before it was moved to its current position.
-- `target`:  
-provides the `<task-list>` element or list item that invoked the change.
-
-### `add`
-#### Detail
-```js
-{ 
-  order: number
-}
-```
-#### Description
-Fires when the "Add" button is clicked.
-- `order`:  
-provides an integer for assigning to a new task.
-
-### `added`
-#### Detail
-```js
-{ 
-  target: HTMLElement,
-  order: number,
-}
-```
-#### Description
-Fires when a new item is added to a list.
-- `order`:  
-provides an integer of the item's index in the `<task-list>` element the item was added to.
-- `target`:  
-provides the `<task-list>` element that the item was added to.
-
-### `removed`
-#### Detail
-```js
-{ 
-  target: HTMLElement,
-  order: number
-}
-```
-#### Description
-Fires when an item is removed from a list.
-- `order`:  
-provides an integer of the item's index in the `<task-list>` element the item was removed from.
-- `target`:  
-provides the `<task-list>` element that the item was removed from.
-
-### `nested`
-#### Detail
-```js
-{ 
-  target: TaskListElement,
-}
-```
-#### Description
-Fires when a new `<task-list>` element is added to a parent `<task-list>` element.
-- `target`:  
-provides the `<task-list>` element that was nested within the parent.
-
-### `collapse`
-#### Detail
-```js
-undefined
-```
-#### Description
-Fires when the `<task-list>` element is collapsed and uncollapsed.
-
-## Slots
-The `<task-list>` element allows customization by using slots to inject custom html content into its shadowRoot.
-
-The `<task-list>` element exposes the following `slot`s: 
-|Slot Name|Description|Default
-|-|-|-|
-|`header`|A heading that describes and distinguishes the list's items from other elements on the page.|[HTMLHeaderElement]|
-|[Default]|Slot that holds all of the list items.(*note: this slot has no name; all children of the `<task-list>` element that do not specificy a `slot` attribute value will be placed in this default slot.*)|[empty]|
-|`add-button`|A button that is used to invoke the `add` event, and indicate that the list needs to have a new item injected.|[HTMLButtonElement]|
-|`footer`|An area to include additional content or data about the list. Can also be used for nested `<task-list>` elements.|[empty]|
-
-## Styling
-The `<task-list>` element itself, and its items, can all be styled with CSS, normally. Each of the elements in the `<task-list>` element's shadowRoot can be selected for styling, directly, by using the `::part()` selector.
-
-In this example, the `header` part is being selected for styling:
-```css
-task-list::part(header)
-{
-    /* styling */
-}
+## Quick Start
+```html
+<task-list>     <task-card value="Dishes" is-finished="true"></task-card>     <task-card value="Laundry" color="#FF00FF"></task-card>     <task-card value="Sweeping"></task-card>     <task-card value="Cocktail (margarita:)">         <textarea slot="description">     1 part  lime juice     1 part  orange liqueur (grand marnier/cointreau/triple sec/etc)     3 parts tequila      1 twist of lime peel     1 tbsp rimming salt      1/2 shaker of ice     1 serving glass "on the rocks" (a serving amount of ice)      combine lime juice, orange liquer, and tequila in shaker     shake well for 10-20 seconds     strain liquid into serving glass     express oils from lime peel and wet serving glass rim with them     apply rimming salt to wetted rim of glass         </textarea>     </task-card> <task-list>
 ```
 
-For a list of all part names, see the [parts](#parts) section.
+## Links
+### Demo:
+https://catapart.github.io/magnitce-task-list
+### Documentation:
+https://catapart.github.io/magnitce-task-list/docs
+### Automated Testing:
+https://catapart.github.io/magnitce-task-list/tests.html
 
-## `<task-card>` and `<task-board>` elements
-The `<task-list>` element is designed as a parent to the [`<task-card>`](https://github.com/catapart/magnitce-task-card) element and a child for the [`<task-board>`](https://github.com/catapart/magnitce-task-board) element.
+## Repo Notes
+This section provides instructions for how to use the repo to develop the library.
 
-Neither the `<task-board>` or the `<task-card>` elements are required for the `<task-list>` element to function, but design decisions were made around how these three elements are expected to work together.
+### Installation
+Install the repo using a package manager:
+```cmd
+npm install
+```
 
-For developing custom implementations, the [`<task-board>` demo page](https://catapart.github.io/magnitce-task-board/demo/) gives examples of the three elements used as expected.
+### Configuration
+#### `tsconfig.json`
+The `tsconfig.json` file is generated by the `vite` dependency and has not been modified by this library. It uses strict linting and defaults to `es` modules, rather than `commonjs` modules. For more information about each of the `tsconfig.json` options, see the [tsconfig documentation](https://www.typescriptlang.org/tsconfig/).
+#### `vite.config`
+The `vite.config` file sets defaults options for the dev, build, and release processes, which allows the code to be packaged as a library (rather than a website) and defines custom inputs and outputs to exclude tests and create both `es` and `umd` modules. It also includes settings that allow for multiple file outputs with well-defined names and selective minification. For more information about configuring `vite`, see the [vite config documentation](https://vite.dev/config/).
+#### `vite.config.tests.ts`
+This specialized `vite.config` file defines custom inputs and outputs that include tests and then are packaged into the `test-runner` directory, rather than built to the `dist` directory.
+
+### Development
+The `src` directory has a `dev` subdirectory that is intended for development. Developers can link to code-test files written in typescript, which allows for full type support while writing tests during development.
+
+Place development tests in the `tests` subdirectory of the `dev` directory. Use the suffix `.tests` to denote that a typescript file is a code-tests file. (*example: `interface.tests.ts`*)
+
+Once tests have been added, the `build-tests` script can be used to compile the typescript tests into javascript tests that will be available for use in any `<code-tests>` or `<test-runner>` elements - including on the `tests.html` page.
+
+### Test Page
+The test page (`tests.html`) in the root directory can be used to demonstrate passing tests to users. 
+
+Tests can be created in the `src/dev/tests` directory and developed using the dev page. When all tests are passing, use the `build-tests` script to transpile the `.ts` test files into `.js` test files that are deployed to the `public/tests` directory, which can be referenced by the `tests.html` page.
+
+The test page will also expect a reference to the library file, which won't exist until the `build` script has been run. If running the project causes errors, check the test page to either remove the script tags requesting the library file, or build the library to provide the test page with its requested source file.
+
+### Scripts
+#### `dev`
+Use `vite` to begin a server with Hot Module Replacement, which will automatically reload any time a change in a source file is saved.
+#### `build`
+Use `vite` to transpile the source code into code chunks or library files. Files are output into the `dist` directory by default.
+#### `preview`
+Use `vite` to serve the `dist` directory. Useful for non-library projects, where the `dist` directory will contain an `index.html` file, or other browse-able entry point.
+#### `build-tests`
+Use `vite` to transpile all files with a `.tests.[ts|js|tsx|jsx]` extension into the `public/tests` subdirectory. Creates javascript files that can be served to the `<test-runner>` and `<code-tests>` components, which are included in the `public/libs` subdirectory.
+#### `changeset`
+Runs the `npx @changesets/cli` command to create a new changeset which will prepare the library to be published.
+#### `release`
+Use `vite` to transpile the source code and then use `changesets` to begin the publication procedure for the repo environment (github or gitlab).  
+If this script is run during CI/CD for the `main` branch, the library is published to [npm](https://www.npmjs.com/). If it is run during CI/CD for any other branch, the library is linted and compiled. It is expected that this command will *only* be used by a CI/CD pipeline, and **never** by a library dev. Running the `release` script on a local codebase is not supported.
 
 
-## License
-This library is in the public domain. You do not need permission, nor do you need to provide attribution, in order to use, modify, reproduce, publish, or sell it or any works using it or derived from it.
+### Publishing
+
+#### Releasing with `changesets`
+Publishing is handled using the `changesets` library which starts the process by requiring a manual entry into a running version log. Once you have defined a set of changes as a version change, the automated processes can prepare the library to be published on to `npm`. When the automation has prepared the release, it will create a pull request from a new branch containing the release package. The publishing developer will be required to merge that branch into main, using the pull request, in order to publish a new version.
+
+The step-by-step process is outline below for both Github and Gitlab:
+
+##### Github Steps
+1. **Run `changeset` command**: `npm run changeset` | `bun run changeset` | `pnpm changesets` | `yarn changesets` | `npx @changesets/cli`
+1. **Log version info**: Add a message that describes the changes in this version
+1. **Check in**: Push changes to repo
+1. **Merge**: Merge branch into `main`
+1.  **Merge Automation Branch**: Await repo automation's creation of a new pull request from a newly created branch. Accept the pull request, merging the branch into main.
+
+After automation completes, the new version will be published to `NPM`.
+
+##### Gitlab Steps
+1. **Run `changeset` command**: `npm run changeset` | `bun run changeset` | `pnpm changesets` | `yarn changesets` | `npx @changesets/cli`
+1. **Log version info**: Add a message that describes the changes in this version
+1. **Check in**: Push changes to repo
+1. **Merge**: Merge branch into `main`
+1.  **Merge Automation Branch**: Await repo automation's creation of a new merge request from a newly created branch. Merge the merge request into main.
+
+After automation completes, the new version will be published to `NPM`.
+
+### Dependencies
+
+#### Library Dependencies
+
+
+#### Development Dependencies
+
+##### [`typescript`](https://www.typescriptlang.org/)
+Typescript provides type checking at dev time which adds compile-time safety to the codebase for a wide range of issues. For more information on Typescript, visit its [website](https://www.typescriptlang.org/).
+
+##### [`@changesets/cli`](https://github.com/changesets/changesets)
+The `changesets` library uses a strict process to handle versioning and publishing which makes the update and deployment of any library to NPM a structured and repeatable series of steps. Versioning is managed by a command-line utility which enforces release notes and semantic versions. Publishing is handled automatically by CI/CD pipelines when code is checked in. The structure allows for automated pipelines to handle linting and testing, while requiring manual directives to invoke action. Versions are not accidentally published, because all code changes that haven't been packaged into a changeset are transparent to the library. As soon as a version is updated (by the library), the CI/CD pipelines will trigger and the library developer will need to merge branches in order to complete the publishing. By enforcing these procedures, `changesets` keeps this library releasing traceable and well-versioned packages.
+
+##### [`vite`](https://vite.dev/)
+Vite is a packaging library that includes a lot of features that make development faster and easier. Packaging and minifying are built in as well as "hot module reload" so that saving any source file will reload the script in the development environment instantly. That is made even better because Vite also dynamically swaps typescript references for javascript references, meaning that a development build can target and debug with the typescript files directly. It is also configurable enough to account for a wide variety of project types.
+
+##### [`vite-plugin-dts`](https://www.npmjs.com/package/vite-plugin-dts)
+This plugin for the `vite` library allows the packaging process to also produce a `.d.ts` file to describe all of the Typescript types exposed by the library. Without that export, other projects that use Typescript would not be able to see the full manifest of exported types.
+
+##### [`@rollup/plugin-terser`](https://www.npmjs.com/package/@rollup/plugin-terser)
+This plugin, which was developed for one of `vite`'s dependencies (`rollup`) but is used in this project by `vite`, provides a type of minification that is not supported by the default library. Using this plugin, the library can be packaged with both unminified and minified code, so that developers who implement the library can debug the code in un-minified files, while still being able to ship a minified version without having to minify it in their own projects.
+
+##### [`@magnit-ce/test-runner`](https://github.com/catapart/magnitce-test-runner)
+This library adds custom HTML elements that allow developers to run simple definitions for automated tests directly in a browser. This element is used in the `dev` directory to provide live automated testing.
+
+##### [`glob`](https://www.npmjs.com/package/glob)
+`glob` is a low-level library that provides full-featured search capabilities to a command-line input. These search features are used by this library to differentiate between test files and source files within the `vite.config` files.
